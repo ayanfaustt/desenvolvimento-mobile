@@ -1,4 +1,10 @@
 {
-  "name": "studyio",
-  "displayName": "studyio"
+  "expo": {
+    "name": "studyio",
+    "slug": "studyio",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
 }
