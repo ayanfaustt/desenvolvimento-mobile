@@ -1,18 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
-import { AppIntroSlider } from 'react-native-app-intro-slider';
 
-export default function Welcome() {
+export default function SingIn() {
     const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
             <Image
-                source={require('../../assets/logo.png')}
-                style={{ width: '100%', marginTop: 58 }}
+                source={require('../../assets/Logo2.png')}
+                style={{ width: '100%', marginTop: 51, marginBottom: 50}}
                 resizeMode='contain'
             />
+            <Text style={styles.title}>Email:</Text>
+            <TextInput
+                style={styles.input}/>
+            
+            <Text style={styles.title}>Password:</Text>
+            <TextInput
+                style={styles.input}/>
+            
+            <TouchableOpacity>
+                <Text style={styles.textRecoverPass}
+                onPress={ () => navigation.navigate('SingUp')}>Forgot your password?</Text>
+            </TouchableOpacity>
+            
             <TouchableOpacity 
             style={styles.button}
             onPress={ () => navigation.navigate('SingIn')}>
@@ -24,8 +36,8 @@ export default function Welcome() {
                 onPress={ () => navigation.navigate('SingUp')}>New? Register</Text>
             </TouchableOpacity>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container:{
@@ -33,7 +45,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F1F5F6',
     },
     button:{
-        position: 'absolute',
         justifyContent: 'center',
         backgroundColor: '#004257',
         borderRadius: 10,
@@ -41,7 +52,7 @@ const styles = StyleSheet.create({
         height: 37,
         alignSelf: 'center',
         alignItems: 'center',
-        bottom: '10%'
+        marginTop: 150
 
     },
     textButton:{
@@ -53,16 +64,27 @@ const styles = StyleSheet.create({
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'center',
-        marginTop: 430,
+        marginTop: 5,
         color: '#006699'
+    },
+    textRecoverPass:{
+        position: 'absolute',
+        justifyContent: 'center',
+        alignSelf: 'flex-start',
+        marginTop: 7,
+        marginLeft: 30,
+        color: '#006699'
+    },
+    title:{
+        fontSize: 16,
+        marginLeft: 30,
+        color: '#004257'
+    },
+    input:{
+       backgroundColor: '#A4C3DA',
+       marginLeft: 30,
+       marginRight: 30,
+       borderRadius: 10,
+       padding: 2
     }
-});
-
-const slides = [
-    {
-        key: 'dashboards',
-        title: "Dashboards",
-        text: 'Follow your development!',
-        image: require('../../assets/Dashboard.png')
-    }
-]
+})

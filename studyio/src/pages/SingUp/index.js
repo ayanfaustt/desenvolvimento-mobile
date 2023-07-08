@@ -9,9 +9,13 @@ export default function SingIn() {
         <View style={styles.container}>
             <Image
                 source={require('../../assets/Logo2.png')}
-                style={{ width: '100%', marginTop: 51, marginBottom: 50}}
+                style={{ width: '100%', marginTop: 51, marginBottom: 30}}
                 resizeMode='contain'
             />
+            <Text style={styles.title}>Name:</Text>
+            <TextInput
+                style={styles.input}/>
+
             <Text style={styles.title}>Email:</Text>
             <TextInput
                 style={styles.input}/>
@@ -19,21 +23,20 @@ export default function SingIn() {
             <Text style={styles.title}>Password:</Text>
             <TextInput
                 style={styles.input}/>
-            
-            <TouchableOpacity>
-                <Text style={styles.textRecoverPass}
-                onPress={ () => navigation.navigate('SingUp')}>Forgot your password?</Text>
-            </TouchableOpacity>
+
+            <Text style={styles.title}>Confim password:</Text>
+            <TextInput
+                style={styles.input}/>
             
             <TouchableOpacity 
             style={styles.button}
             onPress={ () => navigation.navigate('SingIn')}>
-                <Text style={styles.textButton}>Login</Text>
+                <Text style={styles.textButton}>Register</Text>
             </TouchableOpacity>
             
             <TouchableOpacity>
-                <Text style={styles.textRegister}
-                onPress={ () => navigation.navigate('SingUp')}>New? Register</Text>
+                <Text style={styles.textSingin}
+                onPress={ () => navigation.navigate('SingIn')}>Already have an account? Sign in</Text>
             </TouchableOpacity>
         </View>
     )
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
         height: 37,
         alignSelf: 'center',
         alignItems: 'center',
-        marginTop: 150
+        marginTop: 40
 
     },
     textButton:{
@@ -60,19 +63,11 @@ const styles = StyleSheet.create({
         color: '#DAE9F1',
         alignItems: 'center'
     },
-    textRegister:{
+    textSingin:{
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'center',
-        marginTop: 5,
-        color: '#006699'
-    },
-    textRecoverPass:{
-        position: 'absolute',
-        justifyContent: 'center',
-        alignSelf: 'flex-start',
         marginTop: 7,
-        marginLeft: 30,
         color: '#006699'
     },
     title:{

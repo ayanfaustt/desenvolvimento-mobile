@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import Welcome from '../pages/Welcome';
 import SingIn from '../pages/SingIn';
+import SingUp from '../pages/SingUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,11 @@ export default function Routes(){
             <Stack.Screen
                 name="SingIn"
                 component={SingIn}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen
+                name="SingUp"
+                component={SingUp}
                 options={{headerShown: false}}
             />
         </Stack.Navigator>
