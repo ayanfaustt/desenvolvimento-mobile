@@ -33,6 +33,14 @@ export const globalStyles = StyleSheet.create({
         borderRadius: 10,
         margin: 30
     },
+    container2:{
+        backgroundColor: '#DAE9F1',
+        flex: 1,
+        borderColor: '#004257',
+        borderWidth: 0.5,
+        borderRadius: 10,
+        margin: 30
+    },
     tittlePage:{
         fontSize: 28,
         textAlign: 'center',
