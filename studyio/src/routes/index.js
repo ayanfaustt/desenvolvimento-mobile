@@ -8,6 +8,7 @@ import Flashcards from '../pages/Flashcards';
 import Studymaterial from '../pages/Studymaterial';
 import Summaries from '../pages/Summaries';
 import Account from '../pages/Account';
+import Decks from '../pages/Decks';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,10 +50,15 @@ export default function Routes(){
                 component={Summaries}
                 options={{headerShown: false}}
             />
-             <Stack.Screen
-                name="Account"
-                component={Account}
-                options={{headerShown: false}}
+            <Stack.Screen
+               name="Account"
+               component={Account}
+               options={{headerShown: false}}
+            />
+            <Stack.Screen
+               name="Decks"
+               component={Decks}
+               options={{headerShown: false}}
             />
         </Stack.Navigator>
     )
