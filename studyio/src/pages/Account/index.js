@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-
-export default function Dashboard() {
+export default function Account() {
     return (
         <View>
-            <Text>Tela Dashboard!</Text>
+            <Text>Tela Account!</Text>
         </View>
     )
 }
