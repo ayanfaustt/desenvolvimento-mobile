@@ -4,7 +4,7 @@ import { Image } from 'react-native';
 
 import Dashboard from './pages/Dashboard';
 import Flashcards from './pages/Flashcards';
-import Studymaterial from './pages/Studymaterial';
+import StudyMaterial from './pages/StudyMaterial';
 import Summaries from './pages/Summaries';
 import Account from './pages/Account';
 
@@ -34,7 +34,7 @@ export default function Navigator() {
                         )}
                 }}/>
 
-            <Tab.Screen name="Studymaterial" component={Studymaterial} 
+            <Tab.Screen name="StudyMaterial" component={StudyMaterial} 
                 options={{headerShown: false,
                     tabBarIcon: ({ size, focused }) =>{
                         return (

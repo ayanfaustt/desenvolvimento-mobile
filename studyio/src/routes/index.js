@@ -5,10 +5,11 @@ import SingIn from '../pages/SingIn';
 import SingUp from '../pages/SingUp';
 import Dashboard from '../pages/Dashboard';
 import Flashcards from '../pages/Flashcards';
-import Studymaterial from '../pages/Studymaterial';
+import StudyMaterial from '../pages/StudyMaterial';
 import Summaries from '../pages/Summaries';
 import Account from '../pages/Account';
 import Decks from '../pages/Decks';
+import Temporary from '../pages/Temporary';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,11 @@ export default function Routes(){
                 options={{headerShown: false}}
             />
             <Stack.Screen
+                name="Temporary"
+                component={Temporary}
+                options={{headerShown: false}}
+            />
+            <Stack.Screen
                 name="Dashboard"
                 component={Dashboard}
                 options={{headerShown: false}}
@@ -41,8 +47,8 @@ export default function Routes(){
                 options={{headerShown: false}}
             />
             <Stack.Screen
-                name="Studymaterial"
-                component={Studymaterial}
+                name="StudyMaterial"
+                component={StudyMaterial}
                 options={{headerShown: false}}
             />
             <Stack.Screen

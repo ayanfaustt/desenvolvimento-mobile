@@ -27,7 +27,7 @@ export default function SingIn() {
             
             <TouchableOpacity 
             style={styles.button}
-            onPress={ () => navigation.navigate('Dashboard')}>
+            onPress={ () => navigation.navigate('Temporary')}>
                 <Text style={styles.textButton}>Login</Text>
             </TouchableOpacity>
             
