@@ -1,21 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native';
+import Routes from './src/routes';
+import Navigator from './src/navigator';
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StatusBar backgroundColor="#F1F5F6" barStyle="dark-content"/>
+      {/* esse aqui é pra ver as telas de login e registro */}
+      {/* <Routes/> */}
+      {/* esse aqui é pra ver a navbar*/}
+      <Navigator/>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+//  to apanhando pra juntar o tab navigator com o stack navigator, 
+// boa sorte para quem for tentar, deus te abençoe.
+// https://articles.wesionary.team/combining-stack-navigator-with-tab-navigator-in-react-native-react-navigation-253656f45181
