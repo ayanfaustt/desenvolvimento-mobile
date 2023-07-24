@@ -30,7 +30,7 @@ export default function SingIn() {
             
             <TouchableOpacity 
             style={styles.button}
-            onPress={ () => navigation.navigate('Dashboard')}>
+            onPress={ () => navigation.navigate('Temporary')}>
                 <Text style={styles.textButton}>Register</Text>
             </TouchableOpacity>
             

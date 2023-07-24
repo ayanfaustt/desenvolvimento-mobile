@@ -11,9 +11,9 @@ export default function App() {
     <NavigationContainer>
       <StatusBar backgroundColor="#F1F5F6" barStyle="dark-content"/>
       {/* esse aqui é pra ver as telas de login e registro */}
-      {/* <Routes/> */}
+      <Routes/>
       {/* esse aqui é pra ver a navbar*/}
-      <Navigator/>
+      {/* <Navigator/> */}
     </NavigationContainer>
   );
 }
