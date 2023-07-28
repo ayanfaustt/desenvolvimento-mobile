@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 
-export default function SingIn() {
+export function SingUp() {
     const navigation = useNavigation();
 
     return (

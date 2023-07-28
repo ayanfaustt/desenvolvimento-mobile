@@ -1,9 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
+import { React, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { RecoverModal } from '../../modais/RecoverPassword';
 
-export default function SingIn() {
+export function SingIn() {
     const navigation = useNavigation();
+    const [visibleModal, setVisibleModal] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -19,10 +21,19 @@ export default function SingIn() {
             <Text style={styles.title}>Password:</Text>
             <TextInput
                 style={styles.input}/>
+
+            <Modal
+            visible={visibleModal}
+            transparent={true}
+            onRequestClose={ () => setVisibleModal(false) }
+            >
+                <RecoverModal
+                handleClose={ () => setVisibleModal(false) }/>
+            </Modal>
             
             <TouchableOpacity>
                 <Text style={styles.textRecoverPass}
-                onPress={ () => navigation.navigate('SingUp')}>Forgot your password?</Text>
+                onPress={ () => setVisibleModal(true) }>Forgot your password?</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 

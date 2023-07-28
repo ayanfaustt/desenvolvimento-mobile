@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { globalStyles } from '../../styles/global';
 
-export default function Account() {
+export function Account() {
 
     return (
         <View style={globalStyles.container2}>

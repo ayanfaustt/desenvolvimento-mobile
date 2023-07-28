@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import { AntDesign, Entypo } from 'react-native-vector-icons';
 
-export default function Flashcards() {
+export function Flashcards() {
 
     return (
         <View style={globalStyles.container}>

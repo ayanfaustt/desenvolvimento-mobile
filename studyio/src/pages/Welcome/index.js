@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AppIntroSlider } from 'react-native-app-intro-slider';
 import { globalStyles } from '../../styles/global';
 
-export default function Welcome() {
+export function Welcome() {
     const navigation = useNavigation();
 
     function renderSlides({ item }){

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Temporary() {
+export function Temporary() {
     const navigation = useNavigation();
 
     return (
