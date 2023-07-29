@@ -1,23 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AppIntroSlider } from 'react-native-app-intro-slider';
 import { globalStyles } from '../../styles/global';
 
-export default function Welcome() {
+export function Welcome() {
     const navigation = useNavigation();
 
     function renderSlides({ item }){
         return(
-            <View style={{flex:2}}>
+            <SafeAreaView style={{flex:2}}>
                 <Image
                 source={item.image}/>
-            </View>
+            </SafeAreaView>
         )
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Image
                 source={require('../../assets/logo.png')}
                 style={{ width: '100%', marginTop: 58 }}
@@ -42,7 +42,7 @@ export default function Welcome() {
                 <Text style={globalStyles.textClick}
                 onPress={ () => navigation.navigate('SingUp')}>New? Register</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 

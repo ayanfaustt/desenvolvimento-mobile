@@ -1,15 +1,15 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Welcome from '../pages/Welcome';
-import SingIn from '../pages/SingIn';
-import SingUp from '../pages/SingUp';
-import Dashboard from '../pages/Dashboard';
-import Flashcards from '../pages/Flashcards';
-import StudyMaterial from '../pages/StudyMaterial';
-import Summaries from '../pages/Summaries';
-import Account from '../pages/Account';
-import Decks from '../pages/Decks';
-import Temporary from '../pages/Temporary';
+import { Welcome } from '../pages/Welcome';
+import { SingIn } from '../pages/SingIn';
+import { SingUp } from '../pages/SingUp';
+import { Dashboard } from '../pages/Dashboard';
+import { Flashcards } from '../pages/Flashcards';
+import { StudyMaterial } from '../pages/StudyMaterial';
+import { Summaries } from '../pages/Summaries';
+import { Account } from '../pages/Account';
+import { Decks } from '../pages/Decks';
+import { Temporary } from '../pages/Temporary';
 
 const Stack = createNativeStackNavigator();
 

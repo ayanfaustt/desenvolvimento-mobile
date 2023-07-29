@@ -22,7 +22,7 @@ export const globalStyles = StyleSheet.create({
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'center',
-        marginTop: 430,
+        marginTop: '114%',
         color: '#006699'
     },
     container:{
