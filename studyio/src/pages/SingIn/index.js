@@ -2,25 +2,67 @@ import { React, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RecoverModal } from '../../modais/RecoverPassword';
+import Toast from 'react-native-toast-message';
 
 export function SingIn() {
     const navigation = useNavigation();
     const [visibleModal, setVisibleModal] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    async function handleLogin(){
+        try {
+            const response = await fetch('http://192.168.0.109:3000/login', {
+                method: 'POST',
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+            if (response.ok) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Login successfully!',
+                    text2: 'Welcome!'
+                });
+                setTimeout(() => {
+                    navigation.navigate('Temporary');
+                }, 1500);
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Invalid credentials!',
+                });
+            }
+        } catch(error) {
+            console.error('Error occurred while login:', error);
+        }
+    }
 
     return (
         <View style={styles.container}>
+            <Toast/>
             <Image
                 source={require('../../assets/Logo2.png')}
-                style={{ width: '100%', marginTop: 51, marginBottom: 50}}
+                style={{ width: '100%', marginTop: '15%', marginBottom: '15%'}}
                 resizeMode='contain'
             />
-            <Text style={styles.title}>Email:</Text>
+            <Text style={styles.title}>Username:</Text>
             <TextInput
-                style={styles.input}/>
+                style={styles.input}
+                value={username} 
+                onChangeText={setUsername}/>
             
             <Text style={styles.title}>Password:</Text>
             <TextInput
-                style={styles.input}/>
+                style={styles.input}
+                value={password} 
+                secureTextEntry={true}
+                onChangeText={setPassword}/>
 
             <Modal
             visible={visibleModal}
@@ -38,7 +80,7 @@ export function SingIn() {
             
             <TouchableOpacity 
             style={styles.button}
-            onPress={ () => navigation.navigate('Temporary')}>
+            onPress={ () => handleLogin()}>
                 <Text style={styles.textButton}>Login</Text>
             </TouchableOpacity>
             

@@ -1,36 +1,91 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import { React, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 export function SingUp() {
     const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    // ips das maquinas pra fazer as requisicoes
+    // ipQuerem = '192.168.0.109'
+
+    async function handleCreateUser() {
+        if (password != confirmPassword) {
+            console.error('Passwords diverge!');
+        } else {
+            try {
+                const response = await fetch(`http://192.168.0.109:3000/user/create/${username}`, {
+                    method: 'POST',
+                    headers:{
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                if (response.ok) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'User created successfully!',
+                        text2: 'Please login to continue.'
+                    });
+                    setTimeout(() => {
+                        navigation.navigate('SingIn');
+                    }, 1500);
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'User already exist!',
+                    });
+                }
+            } catch(error) {
+                console.error('Error occurred while creating user:', error);
+            }
+        }
+    }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <Toast/>
             <Image
                 source={require('../../assets/Logo2.png')}
                 style={{ width: '100%', marginTop: 51, marginBottom: 30}}
                 resizeMode='contain'
             />
-            <Text style={styles.title}>Name:</Text>
+            <Text style={styles.title}>Username:</Text>
             <TextInput
-                style={styles.input}/>
+                style={styles.input} 
+                value={username} 
+                onChangeText={setUsername}/>
 
             <Text style={styles.title}>Email:</Text>
             <TextInput
-                style={styles.input}/>
+                style={styles.input} 
+                value={email} 
+                onChangeText={setEmail}/>
             
             <Text style={styles.title}>Password:</Text>
             <TextInput
-                style={styles.input}/>
+                style={styles.input} 
+                value={password} 
+                secureTextEntry={true}
+                onChangeText={setPassword}/>
 
-            <Text style={styles.title}>Confim password:</Text>
+            <Text style={styles.title}>Confirm password:</Text>
             <TextInput
-                style={styles.input}/>
-            
+                style={styles.input} 
+                value={confirmPassword} 
+                secureTextEntry={true}
+                onChangeText={setConfirmPassword}/>
             <TouchableOpacity 
             style={styles.button}
-            onPress={ () => navigation.navigate('Temporary')}>
+            onPress={()=> handleCreateUser()}>
                 <Text style={styles.textButton}>Register</Text>
             </TouchableOpacity>
             
@@ -38,7 +93,7 @@ export function SingUp() {
                 <Text style={styles.textSingin}
                 onPress={ () => navigation.navigate('SingIn')}>Already have an account? Sign in</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     )
 }
 
