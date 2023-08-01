@@ -21,3 +21,7 @@ No direitório docs contém as documentações solicitadas da cadeira de Engenha
  - Arquitetura e Interface de usuário ;
  - Documento de Projeto ;
  - Especificações de Requisitos ;
+
+
+#### Outros links
+Link do repositório do backend e frontend web: [repo](https://github.com/ayanfaustt/desenvolvimento-web)
