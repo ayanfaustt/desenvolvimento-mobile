@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 export function Temporary() {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { userId } = route.params;
 
     return (
         <View style={globalStyles.container}>
@@ -18,7 +20,7 @@ export function Temporary() {
             >Desculpe pela burrice</Text>
             <TouchableOpacity 
                 style={styles.button}
-                onPress={ () => navigation.navigate('Flashcards')}>
+                onPress={ () => navigation.navigate('Flashcards', { userId: userId })}>
                     <Text style={globalStyles.textButton}>Flashcards</Text>
             </TouchableOpacity>
             <TouchableOpacity 

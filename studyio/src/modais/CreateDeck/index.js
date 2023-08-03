@@ -7,7 +7,7 @@ export function CreateDeck({ handleClose }) {
 
     async function handleCreateDeck(){
         try {
-            const response = await fetch(`http://192.168.0.109:3000/decks/create/:${33}`, {
+            const response = await fetch(`http://192.168.1.114:3000/decks/create/:${33}`, {
                 method: 'POST',
                 headers:{
                     Accept: 'application/json',
@@ -15,7 +15,7 @@ export function CreateDeck({ handleClose }) {
                 },
                 body: JSON.stringify({
                     deckName: deckName,
-                    tagId: tag
+                    tagId: '2'
                 })
             });
             if (response.ok) {
@@ -38,7 +38,7 @@ export function CreateDeck({ handleClose }) {
             <TouchableOpacity onPress={handleClose}>
                 <Image
                 source={require('../../assets/x.png')}
-                style={{ position: 'absolute', right: '2%', bottom: 120}}
+                style={{position: 'absolute', marginLeft: 280, bottom: 100}}
                 resizeMode='contain'/>
             </TouchableOpacity>
             <Text style={styles.title}>Deck name:</Text>
@@ -46,11 +46,6 @@ export function CreateDeck({ handleClose }) {
                 style={styles.input}
                 value={deckName}
                 onChangeText={setDeckName}/>
-            <Text style={styles.title2}>Tags:</Text>
-            <TextInput
-                style={styles.input}
-                value={tag}
-                onChangeText={setTag}/>
             <View>
             </View>
             <View>
@@ -74,7 +69,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor:'#F1F5F6',
         borderColor: '#004257',
-        borderWidth: 0.5
+        borderWidth: 0.5,
         
     },
     cardHeader:{
@@ -95,7 +90,7 @@ const styles = StyleSheet.create({
         width: 132,
         alignSelf: 'center',
         position: 'absolute',
-        top: 100,
+        top: 70,
         justifyContent: 'center'
     },
     textButton:{
@@ -107,12 +102,6 @@ const styles = StyleSheet.create({
         marginLeft: 33,
         color: '#004257',
         marginTop: '-20%'
-    },
-    title2:{
-        fontSize: 16,
-        marginLeft: 33,
-        color: '#004257',
-        marginTop: '-35%'
     },
     input:{
         backgroundColor: '#A4C3DA',
