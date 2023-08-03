@@ -20,7 +20,7 @@ export function Flashcards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://192.168.1.114:3000/decks/list/${userId}`);
+                const response = await fetch(`http://192.168.100.5:8000/decks/list/14`);
             if (response.ok) {
               const data = await response.json();
               setDeckList(data);

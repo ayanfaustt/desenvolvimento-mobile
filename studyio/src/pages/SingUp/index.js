@@ -18,7 +18,7 @@ export function SingUp() {
             console.error('Passwords diverge!');
         } else {
             try {
-                const response = await fetch(`http://192.168.1.114:3000/user/create/${username}`, {
+                const response = await fetch(`http://192.168.100.5:8000/user/create/${username}`, {
                     method: 'POST',
                     headers:{
                         Accept: 'application/json',
