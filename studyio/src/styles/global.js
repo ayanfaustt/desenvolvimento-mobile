@@ -63,13 +63,29 @@ export const globalStyles = StyleSheet.create({
     },
     cardText:{
         fontSize: 16,
-        fontWeight: 700,
+        fontWeight: 'bold',
         marginTop: 10,
         marginLeft: 5
     },
     cardText2:{
-      fontSize: 14,
-        fontWeight: 200,
+        fontSize: 14,
+        fontWeight: 'normal',
         marginLeft: 10
-    }
+    },
+    floatingButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: -20,
+        backgroundColor: '#004257',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 24,
+    },
 });

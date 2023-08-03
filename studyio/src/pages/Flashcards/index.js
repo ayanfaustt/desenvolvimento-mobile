@@ -1,36 +1,62 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { React, useState, useEffect } from 'react';
+import { SafeAreaView, Text, StyleSheet, TouchableOpacity, FlatList, View, Modal } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
-import { AntDesign, Entypo } from 'react-native-vector-icons';
+import { CreateDeck } from '../../modais/CreateDeck';
 
 export function Flashcards() {
+    const navigation = useNavigation();
+    const [deckList, setDeckList] = useState([]);
+    const [visibleModal, setVisibleModal] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://192.168.0.109:3000/decks/list/${33}`);
+            if (response.ok) {
+              const data = await response.json();
+              setDeckList(data);
+            } else {
+              console.error('Error fetching data:', response.status);
+            }
+          } catch (error) {
+            console.error('Error occurred while list decks: ', error);
+          }
+        };
+    
+        fetchData();
+    }, []);
+
+    async function handleOpenDeck() {
+        navigation.navigate('Decks');
+    }
+    
+    const renderItem = ({ item }) => ( 
+        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenDeck()}>
+        <View style={globalStyles.cardContent}>
+            <Text style={globalStyles.cardText}>{item.deck_name}</Text>
+            <Text style={globalStyles.cardText2}>{item.tagId}</Text>
+        </View> 
+        </TouchableOpacity>
+    );
 
     return (
         <View style={globalStyles.container}>
             <Text style={globalStyles.tittlePage}>Decks</Text>
-            <Text style={styles.banana}>Filter</Text>
-            {/* <AntDesign name="plus"/> */}
-            <TouchableOpacity style={globalStyles.card}>
-                <View style={globalStyles.cardContent}>
-                    <Text style={globalStyles.cardText}>Camadas de Rede</Text>
-                    <Text style={globalStyles.cardText2}>Faculdade</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.card}>
-                <View style={globalStyles.cardContent}>
-                    <Text style={globalStyles.cardText}>Personal pronouns</Text>
-                    <Text style={globalStyles.cardText2}>Ingles</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.card}>
-                <View style={globalStyles.cardContent}>
-                    <Text style={globalStyles.cardText}>Logica de progração</Text>
-                    <Text style={globalStyles.cardText2}>Programação</Text>
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity 
-                style={styles.button}>
-                    <Text style={globalStyles.textButton}>Add</Text>
+            <FlatList
+                data={deckList}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
+            />
+            <Modal
+                visible={visibleModal}
+                transparent={true}
+                onRequestClose={ () => setVisibleModal(false) }>
+                <CreateDeck
+                handleClose={ () => setVisibleModal(false) }/>
+            </Modal>
+            <TouchableOpacity style={globalStyles.floatingButton} onPress={ () => setVisibleModal(true)}>
+                <Text style={globalStyles.buttonText}>+</Text>
             </TouchableOpacity>
         </View>
     )

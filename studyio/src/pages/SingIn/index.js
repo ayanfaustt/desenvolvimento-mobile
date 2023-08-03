@@ -27,7 +27,7 @@ export function SingIn() {
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
-                    text2: 'Welcome!'
+                    text2: `Welcome ${username}!`
                 });
                 setTimeout(() => {
                     navigation.navigate('Temporary');
@@ -65,10 +65,9 @@ export function SingIn() {
                 onChangeText={setPassword}/>
 
             <Modal
-            visible={visibleModal}
-            transparent={true}
-            onRequestClose={ () => setVisibleModal(false) }
-            >
+                visible={visibleModal}
+                transparent={true}
+                onRequestClose={ () => setVisibleModal(false) }>
                 <RecoverModal
                 handleClose={ () => setVisibleModal(false) }/>
             </Modal>
