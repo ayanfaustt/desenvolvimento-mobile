@@ -12,7 +12,7 @@ export function SingIn() {
 
     async function handleLogin(){
         try {
-            const response = await fetch('http://192.168.0.109:3000/login', {
+            const response = await fetch('http://192.168.1.114:3000/session/login', {
                 method: 'POST',
                 headers:{
                     Accept: 'application/json',
@@ -23,14 +23,16 @@ export function SingIn() {
                     password: password
                 })
             });
+            const jsonResponse = await response.json();
+            const userId = jsonResponse["userId"];
             if (response.ok) {
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
-                    text2: 'Welcome!'
+                    text2: `Welcome ${username}!`
                 });
                 setTimeout(() => {
-                    navigation.navigate('Temporary');
+                    navigation.navigate('Temporary', { userId: userId });
                 }, 1500);
             } else {
                 Toast.show({
@@ -65,10 +67,9 @@ export function SingIn() {
                 onChangeText={setPassword}/>
 
             <Modal
-            visible={visibleModal}
-            transparent={true}
-            onRequestClose={ () => setVisibleModal(false) }
-            >
+                visible={visibleModal}
+                transparent={true}
+                onRequestClose={ () => setVisibleModal(false) }>
                 <RecoverModal
                 handleClose={ () => setVisibleModal(false) }/>
             </Modal>
