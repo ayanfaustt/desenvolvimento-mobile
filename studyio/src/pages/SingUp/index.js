@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, SafeAreaVie
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { CreateUser } from '../../hooks/useUser';
+import { useUser } from '../../hooks/useContextUserId';
 
 export function SingUp() {
     const navigation = useNavigation();
@@ -10,6 +11,7 @@ export function SingUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const { ip } = useUser();
 
     // ips das maquinas pra fazer as requisicoes
     // ipQuerem = '192.168.0.109'
@@ -18,12 +20,12 @@ export function SingUp() {
         const data = {
             email: email,
             password: password
-        }
+        };
         if (password != confirmPassword) {
             console.error('Passwords diverge!');
         } else {
             try {
-                await CreateUser(username, data).then(() => {
+                await CreateUser(username, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'User created successfully!',
@@ -40,9 +42,9 @@ export function SingUp() {
                 })
             } catch (error) {
                 console.error('Error occurred while creating user:', error);
-            }
-        }
-    }
+            };
+        };
+    };
 
     return (
         <SafeAreaView style={styles.container}>
