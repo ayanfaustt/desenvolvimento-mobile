@@ -4,14 +4,16 @@ import React, { createContext, useState, useContext } from 'react';
 const UserContext = createContext({
   userId: null,
   setUserId: () => {},
+  ip: null
 });
 
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
+  const ip = 'http://192.168.100.5:8000'
 
   return (
-    <UserContext.Provider value={{ userId, setUserId }}>
+    <UserContext.Provider value={{ userId, setUserId, ip }}>
       {children}
     </UserContext.Provider>
   );

@@ -2,6 +2,8 @@ import { React, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { CreateUser } from '../../hooks/useUser';
+import { useUser } from '../../hooks/useContextUserId';
 
 export function SingUp() {
     const navigation = useNavigation();
@@ -9,27 +11,21 @@ export function SingUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const { ip } = useUser();
 
     // ips das maquinas pra fazer as requisicoes
     // ipQuerem = '192.168.0.109'
 
     async function handleCreateUser() {
+        const data = {
+            email: email,
+            password: password
+        };
         if (password != confirmPassword) {
             console.error('Passwords diverge!');
         } else {
             try {
-                const response = await fetch(`http://192.168.1.114:3000/user/create/${username}`, {
-                    method: 'POST',
-                    headers:{
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                });
-                if (response.ok) {
+                await CreateUser(username, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'User created successfully!',
@@ -38,71 +34,71 @@ export function SingUp() {
                     setTimeout(() => {
                         navigation.navigate('SingIn');
                     }, 1500);
-                } else {
+                }).catch(() => {
                     Toast.show({
                         type: 'error',
                         text1: 'User already exist!',
                     });
-                }
-            } catch(error) {
+                })
+            } catch (error) {
                 console.error('Error occurred while creating user:', error);
-            }
-        }
-    }
+            };
+        };
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Toast/>
+            <Toast />
             <Image
                 source={require('../../assets/Logo2.png')}
-                style={{ width: '100%', marginTop: 51, marginBottom: 30}}
+                style={{ width: '100%', marginTop: 51, marginBottom: 30 }}
                 resizeMode='contain'
             />
             <Text style={styles.title}>Username:</Text>
             <TextInput
-                style={styles.input} 
-                value={username} 
-                onChangeText={setUsername}/>
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername} />
 
             <Text style={styles.title}>Email:</Text>
             <TextInput
-                style={styles.input} 
-                value={email} 
-                onChangeText={setEmail}/>
-            
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail} />
+
             <Text style={styles.title}>Password:</Text>
             <TextInput
-                style={styles.input} 
-                value={password} 
+                style={styles.input}
+                value={password}
                 secureTextEntry={true}
-                onChangeText={setPassword}/>
+                onChangeText={setPassword} />
 
             <Text style={styles.title}>Confirm password:</Text>
             <TextInput
-                style={styles.input} 
-                value={confirmPassword} 
+                style={styles.input}
+                value={confirmPassword}
                 secureTextEntry={true}
-                onChangeText={setConfirmPassword}/>
-            <TouchableOpacity 
-            style={styles.button}
-            onPress={()=> handleCreateUser()}>
+                onChangeText={setConfirmPassword} />
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleCreateUser()}>
                 <Text style={styles.textButton}>Register</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity>
                 <Text style={styles.textSingin}
-                onPress={ () => navigation.navigate('SingIn')}>Already have an account? Sign in</Text>
+                    onPress={() => navigation.navigate('SingIn')}>Already have an account? Sign in</Text>
             </TouchableOpacity>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         backgroundColor: '#F1F5F6',
     },
-    button:{
+    button: {
         justifyContent: 'center',
         backgroundColor: '#004257',
         borderRadius: 10,
@@ -113,28 +109,28 @@ const styles = StyleSheet.create({
         marginTop: 40
 
     },
-    textButton:{
+    textButton: {
         fontSize: 20,
         color: '#DAE9F1',
         alignItems: 'center'
     },
-    textSingin:{
+    textSingin: {
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'center',
         marginTop: 7,
         color: '#006699'
     },
-    title:{
+    title: {
         fontSize: 16,
         marginLeft: 33,
         color: '#004257'
     },
-    input:{
-       backgroundColor: '#A4C3DA',
-       marginLeft: 30,
-       marginRight: 30,
-       borderRadius: 10,
-       padding: 2
+    input: {
+        backgroundColor: '#A4C3DA',
+        marginLeft: 30,
+        marginRight: 30,
+        borderRadius: 10,
+        padding: 2
     }
 })
