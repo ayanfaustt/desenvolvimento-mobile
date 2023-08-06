@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateDeck } from '../../modais/CreateDeck';
 import { CreateTag } from '../../modais/CreateTag';
+import { ListDecks } from '../../hooks/useDeck';
 
 export function Flashcards() {
     const navigation = useNavigation();
@@ -20,6 +21,7 @@ export function Flashcards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                await ListDecks(userId).then()
                 const response = await fetch(`http://192.168.1.114:3000/decks/list/${userId}`);
             if (response.ok) {
               const data = await response.json();

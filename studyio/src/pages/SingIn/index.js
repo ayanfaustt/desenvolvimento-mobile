@@ -6,12 +6,13 @@ import Toast from 'react-native-toast-message';
 import { useUser } from '../../hooks/useContextUserId';
 import { LoginUser } from '../../hooks/useUser';
 
+
 export function SingIn() {
     const navigation = useNavigation();
     const [visibleModal, setVisibleModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { userId, setUserId } = useUser();
+    const { userId, setUserId, ip } = useUser();
 
     async function handleLogin() {
         const data = {
@@ -19,7 +20,7 @@ export function SingIn() {
             password: password
         };
         try {
-            await LoginUser(data).then((response) => {
+            await LoginUser(data, ip).then((response) => {
                 setUserId(response.data.userId);
                 Toast.show({
                     type: 'success',
@@ -34,11 +35,11 @@ export function SingIn() {
                     type: 'error',
                     text1: 'Invalid credentials!',
                 });
-            })
+            });
         } catch (error) {
             console.error('Error occurred while login:', error);
-        }
-    }
+        };
+    };
 
     return (
         <View style={styles.container}>
