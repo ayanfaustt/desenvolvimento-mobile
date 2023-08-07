@@ -5,14 +5,14 @@ import { globalStyles } from '../../styles/global';
 import { CreateDeck } from '../../modais/CreateDeck';
 import { CreateTag } from '../../modais/CreateTag';
 import { ListDecks } from '../../hooks/useDeck';
+import { useUser } from '../../hooks/useContextUserId';
 
 export function Flashcards() {
     const navigation = useNavigation();
     const [deckList, setDeckList] = useState([]);
     const [visibleModal, setVisibleModal] = useState(false);
     const [visibleModal2, setVisibleModal2] = useState(false);
-    const route = useRoute();
-    const { userId } = route.params;
+    const { userId, ip } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -21,32 +21,31 @@ export function Flashcards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await ListDecks(userId).then()
-                const response = await fetch(`http://192.168.1.114:3000/decks/list/${userId}`);
-            if (response.ok) {
-              const data = await response.json();
-              setDeckList(data);
-            } else {
-              console.error('Error fetching data:', response.status);
+                await ListDecks(userId, ip).then((response) => {
+                    const data = response.data;
+                    setDeckList(data);
+                }).catch((err) => {
+                    console.log('Error fetching data:', err);
+                })
+
+            } catch (error) {
+                console.error('Error occurred while list decks: ', error);
             }
-          } catch (error) {
-            console.error('Error occurred while list decks: ', error);
-          }
         };
-    
+
         fetchData();
     }, []);
 
     async function handleOpenDeck() {
         navigation.navigate('Decks');
     }
-    
-    const renderItem = ({ item }) => ( 
+
+    const renderItem = ({ item }) => (
         <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenDeck()}>
-        <View style={globalStyles.cardContent}>
-            <Text style={globalStyles.cardText}>{item.deck_name}</Text>
-            <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
-        </View> 
+            <View style={globalStyles.cardContent}>
+                <Text style={globalStyles.cardText}>{item.deck_name}</Text>
+                <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
+            </View>
         </TouchableOpacity>
     );
 
@@ -61,9 +60,9 @@ export function Flashcards() {
             <Modal
                 visible={visibleModal}
                 transparent={true}
-                onRequestClose={ () => setVisibleModal(false) }>
+                onRequestClose={() => setVisibleModal(false)}>
                 <CreateDeck
-                handleClose={ () => setVisibleModal(false)}/>
+                    handleClose={() => setVisibleModal(false)} />
             </Modal>
             <Modal
                 visible={visibleModal2}
@@ -71,22 +70,22 @@ export function Flashcards() {
                 onRequestClose={() => setVisibleModal2(false)}
                 data={userId}>
                 <CreateTag
-                handleClose={ () => setVisibleModal2(false)}/>
+                    handleClose={() => setVisibleModal2(false)} />
             </Modal>
             {isMenuOpen && (
                 <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModal(true)}>
-                <Image
-                    source={require('../../assets/layers.png')}
-                    style={styles.subButtonImage}
-                />
+                    <Image
+                        source={require('../../assets/layers.png')}
+                        style={styles.subButtonImage}
+                    />
                 </TouchableOpacity>
             )}
             {isMenuOpen && (
                 <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModal2(true)}>
-                <Image
-                    source={require('../../assets/tag.png')}
-                    style={styles.subButtonImage}
-                />
+                    <Image
+                        source={require('../../assets/tag.png')}
+                        style={styles.subButtonImage}
+                    />
                 </TouchableOpacity>
             )}
             <TouchableOpacity style={globalStyles.floatingButton} onPress={toggleMenu}>
@@ -96,13 +95,13 @@ export function Flashcards() {
     )
 }
 
-const styles = StyleSheet.create ({
-    banana:{
+const styles = StyleSheet.create({
+    banana: {
         fontSize: 12,
         color: '#004257',
         textAlign: 'right'
     },
-    button:{
+    button: {
         justifyContent: 'center',
         backgroundColor: '#004257',
         borderRadius: 10,
