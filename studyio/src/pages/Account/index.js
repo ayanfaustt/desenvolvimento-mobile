@@ -1,48 +1,46 @@
-    import React from 'react';
+    import { React, useState } from 'react';
     import { View, Text, StyleSheet, TouchableOpacity, Image, Modal} from 'react-native';
     import { globalStyles } from '../../styles/global';
-    import {Picker} from '@react-native-picker/picker';
-
-    const Changeiconmodal = ({visible, children}) => {
-        const [showModal, setShowModal] = React.useState(visible)
-        React.useEffect(() =>  {
-            toggleModal()
-        }, [visible]);
-
-        const toggleModal = () => {
-            if(visible){
-                setShowModal(true);
-            }else{
-                setShowModal(false);
-            }
-        }
-
-        const [selectedValue, setSelectedValue] = React.useState('EN');
-
-        return <Modal transparent visible={showModal}>
-            <View style={styles.changeiconmodal}>
-                <View style={styles.changepasscontainer}>{children}</View>
-            </View>
-        </Modal>
-    };
+    import { Changeiconmodal } from '../../modais/Changeicon';
+    import { useNavigation } from '@react-navigation/native';
 
     export function Account() {
+        const [selectedIcon, setSelectedIcon] = useState(null);
 
-        const [visible, setVisible] = React.useState(false);
+        const [visibleModal, setVisibleModal] = useState(false);
+
+        const navigation = useNavigation();
+
+        const handleIconChange = (iconName) => {
+            setSelectedIcon(iconName);
+            setVisibleModal(false);
+        };
+
+        const icons = {
+            "profile-icon01.png": require('../../assets/prof-icon/prof-icon01.png'),
+            "profile-icon02.png": require('../../assets/prof-icon/prof-icon02.png'),
+            "profile-icon03.png": require('../../assets/prof-icon/prof-icon03.png'),
+            "profile-icon04.png": require('../../assets/prof-icon/prof-icon04.png'),
+            "profile-icon05.png": require('../../assets/prof-icon/prof-icon05.png'),
+            "profile-icon06.png": require('../../assets/prof-icon/prof-icon06.png'),
+            "profile-icon07.png": require('../../assets/prof-icon/prof-icon07.png'),
+            "profile-icon08.png": require('../../assets/prof-icon/prof-icon08.png'),
+        };
 
         return (
             <View style={globalStyles.container2}>
+
                 <View>
                     <Image
-                        source={require('../../assets/prof-icon/prof-icon01.png')}
+                        source={selectedIcon ? icons[selectedIcon] : require('../../assets/prof-icon/prof-icon01.png')}
                         style={{ alignSelf: 'center', marginTop: 30 }} />
-                <TouchableOpacity onPress={() => setVisible(true)}>
-                    <Image
-                        source={require('../../assets/edit.png')}
-                        style={styles.editProfiButton}
-                    />
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setVisibleModal(true)}>
+                        <Image
+                            source={require('../../assets/edit.png')}
+                            style={styles.editProfiButton} />
+                    </TouchableOpacity>
                 </View>
+
                 <View style={styles.fields}>
                     <View style={styles.fieldsInside}>
                         <View style={styles.iconInput}>
@@ -51,13 +49,14 @@
                                 style={{}} />
                             <Text style={styles.input}>User</Text>
                         </View>
-                    <TouchableOpacity>
-                        <Image
-                            source={require('../../assets/edit-2.png')}
-                            style={{}} />
-                    </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Image
+                                source={require('../../assets/edit-2.png')}
+                                style={{}} />
+                        </TouchableOpacity>
                     </View>
                 </View>
+
                 <View style={styles.fields}>
                     <View style={styles.fieldsInside}>
                         <View style={styles.iconInput}>
@@ -65,19 +64,15 @@
                                 source={require('../../assets/settings.png')}
                                 style={{}} />
                             <Text style={styles.input}>Language</Text>
-                            <Picker
-                                selectedValue={selectedValue}
-                                onValueChange={(itemValue) => setSelectedValue(itemValue)}>
-                                <Picker.Item label="EN" value="EN" />
-                                <Picker.Item label="BR" value="BR" />
-                            </Picker>
                         </View>
                     </View>
                 </View>
+
                 <TouchableOpacity
                     style={styles.button}>
                     <Text style={globalStyles.textButton}>Change password</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity onPress={ () => navigation.navigate('Welcome')}
                     style={styles.logoutButton}>
                     <Text style={styles.logoutButtonText}>Logout </Text>
@@ -85,35 +80,16 @@
                         source={require('../../assets/log-out.png')}
                         style={styles.logouticon}/>
                 </TouchableOpacity>
-                    <Changeiconmodal visible={visible}>
-                        <View style={{flexBasis: 'auto',}}>
-                            <View style={styles.header}>
-                                <View style={styles.button_changeicon}>
-                                    <Text style={globalStyles.textButton}>Change icon</Text>
-                                </View>
-                                <TouchableOpacity style={styles.closechangeicon} onPress={() => setVisible(false)}>
-                                    <Image source={require('../../assets/x.png')}/>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{alignSelf: 'center', alignItems: 'center', height: '5%', bottom: '150%'}}>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon01.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon02.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon03.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon04.png')}/>
-                                </View>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon08.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon05.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon06.png')}/>
-                                    <Image source={require('../../assets/miniprof-icon/profile-icon07.png')}/>
-                                </View>
-                            </View>
-                            <TouchableOpacity style={styles.button_save}>
-                                <Text styles={{color: '#DAE9F1'}}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Changeiconmodal>
+
+                <Modal
+                    visible={visibleModal}
+                    transparent={true}
+                    onRequestClose={() => setVisibleModal(false)}>
+                        <Changeiconmodal
+                            handleIconChange={handleIconChange}
+                            handleClose={() => setVisibleModal(false)} />
+                </Modal>
+
             </View>
         )
     }
@@ -134,28 +110,6 @@
             alignItems: 'flex-end',
             justifyContent: 'center'
         },
-        changeiconmodal: {
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        changepasscontainer: {
-            width: '80%',
-            backgroundColor: '#F1F5F6',
-            paddingHorizontal: 20,
-            paddingVertical: 90,
-            borderColor: '#004257',
-            borderWidth: 0.5,
-            borderRadius: 10,
-            margin: 30
-        },
-        closechangeicon: {
-            alignSelf: 'flex-end',
-            alignItems: 'flex-end',
-            marginLeft: 105,
-            bottom: 100
-        },
         button: {
             justifyContent: 'center',
             backgroundColor: '#004257',
@@ -166,17 +120,6 @@
             alignItems: 'center',
             bottom: '10%',
             marginTop: 200
-        },
-        button_changeicon: {
-            justifyContent: 'center',
-            backgroundColor: '#004257',
-            borderRadius: 10,
-            width: 145,
-            height: 45,
-            alignSelf: 'center',
-            alignItems: 'center',
-            bottom: 110,
-            marginHorizontal: 'auto'
         },
         button_save: {
             position: 'absolute',
