@@ -36,12 +36,12 @@ export function Flashcards() {
         fetchData();
     }, []);
 
-    async function handleOpenDeck() {
-        navigation.navigate('Decks');
+    async function handleOpenDeck(item) {
+        navigation.navigate('Decks', {item});
     }
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenDeck()}>
+        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenDeck(item)}>
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.deck_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
@@ -76,7 +76,6 @@ export function Flashcards() {
                 <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModal(true)}>
                     <Image
                         source={require('../../assets/layers.png')}
-                        style={styles.subButtonImage}
                     />
                 </TouchableOpacity>
             )}
@@ -84,7 +83,6 @@ export function Flashcards() {
                 <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModal2(true)}>
                     <Image
                         source={require('../../assets/tag.png')}
-                        style={styles.subButtonImage}
                     />
                 </TouchableOpacity>
             )}
@@ -95,21 +93,3 @@ export function Flashcards() {
     )
 }
 
-const styles = StyleSheet.create({
-    banana: {
-        fontSize: 12,
-        color: '#004257',
-        textAlign: 'right'
-    },
-    button: {
-        justifyContent: 'center',
-        backgroundColor: '#004257',
-        borderRadius: 10,
-        width: 132,
-        height: 37,
-        alignSelf: 'center',
-        alignItems: 'center',
-        bottom: '10%',
-        marginTop: 270
-    },
-})
