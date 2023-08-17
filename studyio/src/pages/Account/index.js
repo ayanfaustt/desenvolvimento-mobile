@@ -4,6 +4,7 @@
     import { Changeiconmodal } from '../../modais/Changeicon';
     import { useNavigation } from '@react-navigation/native';
     import { ChangepassModal } from '../../modais/Changepassword';
+    import { ChangeusernameModal } from '../../modais/Changeusername';
     import { useUser } from '../../hooks/useContextUserId';
 
     export function Account() {
@@ -14,7 +15,10 @@
         const [isTextPressed, setIsTextPressed] = useState(false);
 
         const [visibleModal, setVisibleModal] = useState(false);
+
         const [visibleModal2, setVisibleModal2] = useState(false);
+
+        const [visibleModal3, setVisibleModal3] = useState(false);
 
         const navigation = useNavigation();
 
