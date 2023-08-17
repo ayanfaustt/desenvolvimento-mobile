@@ -5,18 +5,15 @@ const UserContext = createContext({
   userId: null,
   setUserId: () => {},
   ip: null,
-  username: null, // Adiciona o campo username ao contexto
-  setUsername: () => {}, // Adiciona a função para atualizar o username
 });
 
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState(null);
-  const ip = 'http://192.168.0.105:8081'
+  const ip = 'http://192.168.0.105:8000'
 
   return (
-    <UserContext.Provider value={{ userId, setUserId, ip, username, setUsername }}>
+    <UserContext.Provider value={{ userId, setUserId, ip }}>
       {children}
     </UserContext.Provider>
   );

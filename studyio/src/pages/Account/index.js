@@ -60,7 +60,7 @@
                                 style={{}} />
                             <Text style={styles.input}>{username}</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => setVisibleModal3(true)}>
                             <Image
                                 source={require('../../assets/edit-2.png')}
                                 style={{left: 20}} />
@@ -116,6 +116,14 @@
                     onRequestClose={() => setVisibleModal2(false)}>
                         <ChangepassModal
                         handleClose={() => setVisibleModal2(false)}/>
+                </Modal>
+
+                <Modal
+                    visible={visibleModal3}
+                    transparent={true}
+                    onRequestClose={() => setVisibleModal3(false)}>
+                            <ChangeusernameModal
+                            handleClose={() => setVisibleModal3(false)}/>
                 </Modal>
 
             </View>
