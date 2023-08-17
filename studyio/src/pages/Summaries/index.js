@@ -4,14 +4,15 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateSummarie } from '../../modais/CreateSummarie';
 import { CreateTag } from '../../modais/CreateTag';
+import { ListSummaries } from '../../hooks/useSummarie';
+import { useUser } from '../../hooks/useContextUserId';
 
 export function Summaries() {
     const navigation = useNavigation();
     const [summarieList, setSummarieList] = useState([]);
     const [visibleModal, setVisibleModal] = useState(false);
     const [visibleModal2, setVisibleModal2] = useState(false);
-    const route = useRoute();
-    const { userId } = route.params;
+    const { userId, ip } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -20,31 +21,28 @@ export function Summaries() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://192.168.0.165:8000/summaries/list/${userId}`);
-            if (response.ok) {
-              const data = await response.json();
-              setSummarieList(data);
-            } else {
-              console.error('Error fetching data:', response.status);
-            }
-          } catch (error) {
-            console.error('Error occurred while list summaries: ', error);
-          }
+                await ListSummaries(userId, ip).then((res) => {
+                    setSummarieList(res.data);
+                }).catch((error) => {
+                    console.error('Error fetching data:', error);
+                });
+            } catch (error) {
+                console.error('Error occurred while list summaries: ', error);
+            };
         };
-    
         fetchData();
     }, []);
 
     async function handleOpenSummarie() {
         navigation.navigate('Summaries');
-    }
-    
-    const renderItem = ({ item }) => ( 
+    };
+
+    const renderItem = ({ item }) => (
         <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie()}>
-        <View style={globalStyles.cardContent}>
-            <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
-            <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
-        </View> 
+            <View style={globalStyles.cardContent}>
+                <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
+                <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
+            </View>
         </TouchableOpacity>
     );
 
@@ -59,9 +57,9 @@ export function Summaries() {
             <Modal
                 visible={visibleModal}
                 transparent={true}
-                onRequestClose={ () => setVisibleModal(false) }>
+                onRequestClose={() => setVisibleModal(false)}>
                 <CreateSummarie
-                handleClose={ () => setVisibleModal(false)}/>
+                    handleClose={() => setVisibleModal(false)} />
             </Modal>
             <Modal
                 visible={visibleModal2}
@@ -69,22 +67,22 @@ export function Summaries() {
                 onRequestClose={() => setVisibleModal2(false)}
                 data={userId}>
                 <CreateTag
-                handleClose={ () => setVisibleModal2(false)}/>
+                    handleClose={() => setVisibleModal2(false)} />
             </Modal>
             {isMenuOpen && (
                 <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModal(true)}>
-                <Image
-                    source={require('../../assets/lista-da-area-de-transferencia.png')}
-                    style={styles.subButtonImage}
-                />
+                    <Image
+                        source={require('../../assets/lista-da-area-de-transferencia.png')}
+                        style={styles.subButtonImage}
+                    />
                 </TouchableOpacity>
             )}
             {isMenuOpen && (
                 <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModal2(true)}>
-                <Image
-                    source={require('../../assets/tag.png')}
-                    style={styles.subButtonImage}
-                />
+                    <Image
+                        source={require('../../assets/tag.png')}
+                        style={styles.subButtonImage}
+                    />
                 </TouchableOpacity>
             )}
             <TouchableOpacity style={globalStyles.floatingButton} onPress={toggleMenu}>
@@ -94,13 +92,13 @@ export function Summaries() {
     )
 }
 
-const styles = StyleSheet.create ({
-    banana:{
+const styles = StyleSheet.create({
+    banana: {
         fontSize: 12,
         color: '#004257',
         textAlign: 'right'
     },
-    button:{
+    button: {
         justifyContent: 'center',
         backgroundColor: '#004257',
         borderRadius: 10,

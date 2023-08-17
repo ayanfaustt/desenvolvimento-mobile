@@ -1,39 +1,60 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
+import { useUser } from '../../hooks/useContextUserId';
+import { ListTags, CreateNewSummarie } from '../../hooks/useSummarie';
+import RNPickerSelect from 'react-native-picker-select';
 
 export function CreateSummarie({ handleClose }) {
-    const [summarieName, setSummarieName] = useState('');
-    const [tag, setTag] = useState('');
+    const { userId, ip } = useUser('');
+    const [data, setData] = useState({ summarieName: "", tagId: "", summarieContent: "" });
+    const [selectedTag, setSelectedTag] = useState(null);
+    const [tagOptions, setTagOptions] = useState([]);
+
 
     async function handleCreateSummarie() {
+
         try {
-            const response = await fetch(`http://192.168.0.165:8000/summaries/create/${1}`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    summarieName: summarieName,
-                    summarieContent: 'isso é só um teste',
-                    isGpt: false,
-                    tagId: '1'
-                })
-            });
-            if (response.ok) {
-                console.log('deu bom');
-
-
+            await CreateNewSummarie(userId, data, ip).then((res => {
+                // console.log(res)
                 handleClose()
-            } else {
-                handleClose()
-                console.log('deu merda')
 
-            }
+            })).catch((error) => {
+                console.error('Error fetching data:', error);
+                handleClose()
+            })
         } catch (error) {
             console.error('Error occurred while create summarie:', error);
         }
     }
+
+    function handleInputChange(name, value) {
+
+        setData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+
+    }
+
+    useEffect(() => console.log(data), [data])
+
+    useEffect(() => {
+        async function fetchTagOptions() {
+            try {
+                const response = await ListTags(userId, ip);
+                const options = response.data.map(tag => ({
+                    label: tag.tag_name,
+                    value: tag.id,
+                }));
+                setTagOptions(options);
+                console.log(options);
+            } catch (error) {
+                console.error("Error fetching tag options:", error);
+            }
+        }
+        fetchTagOptions();
+    }, [userId, ip]);
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -43,20 +64,44 @@ export function CreateSummarie({ handleClose }) {
             <TouchableOpacity onPress={handleClose}>
                 <Image
                     source={require('../../assets/x.png')}
-                    style={{ position: 'absolute', marginLeft: 280, bottom: 100 }}
+                    style={{ position: 'relative', marginLeft: 280, bottom: 0 }}
                     resizeMode='contain' />
             </TouchableOpacity>
-            <Text style={styles.title}>Summarie name:</Text>
-            <TextInput
-                style={styles.input}
-                value={summarieName}
-                onChangeText={setSummarieName} />
-            <View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.title}>Summarie name:</Text>
+                <TextInput
+                    name="summarieName"
+                    style={styles.input}
+                    value={data.summarieName}
+                    onChangeText={(value) => handleInputChange('summarieName', value)} />
             </View>
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.title}>Summarie Content:</Text>
+                <TextInput
+                    name="summarieContent"
+                    style={styles.inputGrande}
+                    value={data.summarieContent}
+                    onChangeText={(value) => handleInputChange('summarieContent', value)} />
+            </View>
+
+            <View>
+                <RNPickerSelect
+                    onValueChange={(value) => handleInputChange('tagId', value)}
+                    items={tagOptions}
+                    onOpen={() => setSelectedTag(null)} // Reset selectedTag when picker is opened
+                    placeholder={{ label: 'Selecione uma tag', value: null }}
+                    hideDoneBar
+                />
+                {selectedTag && <Text>Selected Tag: {selectedTag.label}</Text>}
+            </View>
+
             <View>
                 <TouchableOpacity
                     style={styles.addButton}
-                    onPress={() => handleCreateSummarie()}>
+                    onPress={() => handleCreateSummarie()}
+                >
                     <Text style={styles.textButton}>Add</Text>
                 </TouchableOpacity>
             </View>
@@ -65,6 +110,9 @@ export function CreateSummarie({ handleClose }) {
 }
 
 const styles = StyleSheet.create({
+    inputContainer: {
+        marginBottom: 10,
+    },
     container: {
         width: 307,
         height: 260,
@@ -95,7 +143,7 @@ const styles = StyleSheet.create({
         width: 132,
         alignSelf: 'center',
         position: 'absolute',
-        top: 70,
+        top: 20,
         justifyContent: 'center'
     },
     textButton: {
@@ -106,9 +154,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 33,
         color: '#004257',
-        marginTop: '-20%'
+        marginTop: '10'
     },
     input: {
+        backgroundColor: '#A4C3DA',
+        marginLeft: 30,
+        marginRight: 30,
+        borderRadius: 10,
+        padding: 2
+    },
+    inputGrande: {
         backgroundColor: '#A4C3DA',
         marginLeft: 30,
         marginRight: 30,
