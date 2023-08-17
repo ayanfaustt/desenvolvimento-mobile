@@ -13,9 +13,6 @@ export function SingUp() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const { ip } = useUser();
 
-    // ips das maquinas pra fazer as requisicoes
-    // ipQuerem = '192.168.0.109'
-
     async function handleCreateUser() {
         const data = {
             email: email,

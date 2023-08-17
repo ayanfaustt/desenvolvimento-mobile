@@ -51,7 +51,7 @@ export function Flashcards() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={globalStyles.tittlePage}>Decks:</Text>
+            <Text style={globalStyles.tittlePage}>Decks</Text>
             <FlatList
                 data={deckList}
                 renderItem={renderItem}
@@ -89,7 +89,7 @@ export function Flashcards() {
                 </TouchableOpacity>
             )}
             <TouchableOpacity style={globalStyles.floatingButton} onPress={toggleMenu}>
-                <Text style={globalStyles.buttonText}>{isMenuOpen ? "-" : "+"}</Text>
+                <Text style={globalStyles.buttonText}>+</Text>
             </TouchableOpacity>
         </View>
     )
