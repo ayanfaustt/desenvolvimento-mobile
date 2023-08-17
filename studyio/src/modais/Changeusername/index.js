@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, SafeAreaViewBase} from 'react-native';
+import { globalStyles } from '../../styles/global';
 
 export function ChangeusernameModal ({ handleClose}) {
 
@@ -16,7 +17,7 @@ export function ChangeusernameModal ({ handleClose}) {
             </View>
         </SafeAreaViewBase>
     )
-}
+};
 
 const styles = StyleSheet.create({
     button: {
