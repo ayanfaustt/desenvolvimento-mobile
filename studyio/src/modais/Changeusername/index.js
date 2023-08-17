@@ -5,7 +5,7 @@ import { globalStyles } from '../../styles/global';
 export function ChangeusernameModal ({ handleClose}) {
 
     return (
-        <SafeAreaViewBase style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', height: 1000}}>
+        <SafeAreaView style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', height: 1000}}>
             <View style={styles.button}>
                 <Text style={globalStyles.textButton}>Change username</Text>
                 <TouchableOpacity onPress={ handleClose }
@@ -15,7 +15,7 @@ export function ChangeusernameModal ({ handleClose}) {
                         style={{left: 10}}/>
                 </TouchableOpacity>
             </View>
-        </SafeAreaViewBase>
+        </SafeAreaView>
     )
 };
 
