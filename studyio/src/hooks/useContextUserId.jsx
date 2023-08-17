@@ -4,7 +4,7 @@ import React, { createContext, useState, useContext } from 'react';
 const UserContext = createContext({
   userId: null,
   setUserId: () => {},
-  ip: null
+  ip: null,
 });
 
 
