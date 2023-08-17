@@ -10,7 +10,8 @@ const UserContext = createContext({
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
-  const ip = 'http://192.168.0.105:8000'
+  // const ip = 'http://192.168.100.5:8000' // diogo
+  const ip = 'http://192.168.0.113:3000' // querem
 
   return (
     <UserContext.Provider value={{ userId, setUserId, ip }}>

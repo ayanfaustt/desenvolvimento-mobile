@@ -1,30 +1,30 @@
 import { React, useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
+import { useUser } from '../../hooks/useContextUserId';
+import Toast from 'react-native-toast-message';
 
 export function CreateDeck({ handleClose }) {
     const [deckName, setDeckName] = useState('');
     const [tag, setTag] = useState('');
+    const { userId, ip } = useUser();
 
     async function handleCreateDeck(){
+        const data = {
+            deckName: deckName,
+            tagId: 1
+        };
         try {
-            const response = await fetch(`http://192.168.1.114:3000/decks/create/:${33}`, {
-                method: 'POST',
-                headers:{
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    deckName: deckName,
-                    tagId: '2'
-                })
-            });
-            if (response.ok) {
-                console.log('deu bom');
-                handleClose
-            } else {
-                handleClose  
-                console.log('deu merda')
-            }
+            await CreateDeck(userId, data, ip).then(() => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Deck created successfully!'
+                });
+            }).catch(() => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Deck already exist!',
+                });
+            })
         } catch(error) {
             console.error('Error occurred while create deck:', error);
         }

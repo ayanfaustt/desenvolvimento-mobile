@@ -52,7 +52,7 @@ export const globalStyles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         borderRadius: 10,
-        marginTop: 15
+        marginTop: 15,
     },
     cardContent:{
         borderColor: '#004257',
@@ -71,6 +71,12 @@ export const globalStyles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'normal',
         marginLeft: 10
+    },
+    cardText3:{
+        fontSize: 14,
+        fontWeight: 'normal',
+        marginLeft: 8,
+        paddingTop: 30
     },
     floatingButton: {
         position: 'absolute',
@@ -115,8 +121,26 @@ export const globalStyles = StyleSheet.create({
         elevation: 3,
     },
     subButtonText: {
-    color: 'black',
-    fontSize: 16,
-    marginRight: 10
+        color: 'black',
+        fontSize: 16,
+        marginRight: 10
     },
+    tag: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    tagText: {
+        fontSize: 14,
+        paddingTop: 33,
+        paddingLeft: 15,
+        fontStyle: 'italic',
+    },
+    tagLine: {
+        borderBottomWidth: 1,
+        flex: 1,
+        borderBottomColor: '#00212C',
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20
+    }
 });
