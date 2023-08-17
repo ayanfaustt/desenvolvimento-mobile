@@ -3,11 +3,18 @@
     import { globalStyles } from '../../styles/global';
     import { Changeiconmodal } from '../../modais/Changeicon';
     import { useNavigation } from '@react-navigation/native';
+    import { ChangepassModal } from '../../modais/Changepassword';
+    import { useUser } from '../../hooks/useContextUserId';
 
     export function Account() {
         const [selectedIcon, setSelectedIcon] = useState(null);
 
+        const { username } = useUser();
+
+        const [isTextPressed, setIsTextPressed] = useState(false);
+
         const [visibleModal, setVisibleModal] = useState(false);
+        const [visibleModal2, setVisibleModal2] = useState(false);
 
         const navigation = useNavigation();
 
@@ -42,17 +49,17 @@
                 </View>
 
                 <View style={styles.fields}>
-                    <View style={styles.fieldsInside}>
+                    <View style={styles.fieldsInside2}>
                         <View style={styles.iconInput}>
                             <Image
                                 source={require('../../assets/user-icon.png')}
                                 style={{}} />
-                            <Text style={styles.input}>User</Text>
+                            <Text style={styles.input}>{username}</Text>
                         </View>
                         <TouchableOpacity>
                             <Image
                                 source={require('../../assets/edit-2.png')}
-                                style={{}} />
+                                style={{left: 20}} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -63,14 +70,23 @@
                             <Image
                                 source={require('../../assets/settings.png')}
                                 style={{}} />
-                            <Text style={styles.input}>Language</Text>
+                            <Text style={styles.input}> Language</Text>
+                            <TouchableOpacity>
+                                <Image
+                                    source={require('../../assets/language.png')}
+                                    style={{top: -5, height: 25, borderRadius: 5}}/>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
 
                 <TouchableOpacity
-                    style={styles.button}>
-                    <Text style={globalStyles.textButton}>Change password</Text>
+                    style={styles.button}
+                    onPress={() => setVisibleModal2(true)}>
+                    <Text style={globalStyles.textButton}>Change password </Text>
+                    <Image 
+                        source={require('../../assets/right_arrow.png')}
+                        style={{left: 5, height: 15}}/>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={ () => navigation.navigate('Welcome')}
@@ -90,26 +106,19 @@
                             handleClose={() => setVisibleModal(false)} />
                 </Modal>
 
+                <Modal   
+                    visible={visibleModal2}
+                    transparent={true}
+                    onRequestClose={() => setVisibleModal2(false)}>
+                        <ChangepassModal
+                        handleClose={() => setVisibleModal2(false)}/>
+                </Modal>
+
             </View>
         )
     }
 
     const styles = StyleSheet.create({
-        banana: {
-            marginLeft: 30,
-            marginRight: 30,
-            marginTop: 80,
-            borderRadius: 10,
-            padding: 2,
-            backgroundColor: '#A4C3DA',
-        },
-        header: {
-            flexDirection: 'row',
-            width: '100%',
-            height: 40,
-            alignItems: 'flex-end',
-            justifyContent: 'center'
-        },
         button: {
             justifyContent: 'center',
             backgroundColor: '#004257',
@@ -119,20 +128,9 @@
             alignSelf: 'center',
             alignItems: 'center',
             bottom: '10%',
-            marginTop: 200
-        },
-        button_save: {
-            position: 'absolute',
-            justifyContent: 'center',
-            backgroundColor: '#004257',
-            borderRadius: 10,
-            width: 145,
-            height: 45,
-            alignItems: 'center',
-            marginHorizontal: 'auto',
-            top: '230%',
-            alignSelf: 'center',
-            textDecorationColor: '#DAE9F1'
+            marginTop: 200,
+            flexDirection: 'row',
+            top: -140
         },
         logoutButton: {
             position: 'absolute',
@@ -161,6 +159,12 @@
         fieldsInside: {
             flexDirection: 'row',
             borderBottomWidth: 1.75,
+            width: 220
+        },
+        fieldsInside2: {
+            flexDirection: 'row',
+            borderBottomWidth: 1.75,
+            width: 220
         },
         input: {
             width: 150

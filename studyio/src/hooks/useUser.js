@@ -12,3 +12,8 @@ export const CreateUser = (username, data, ip) => {
     
 }
 
+// Alteração de senha
+
+// export const Updatepassword = (password, data, ip) => {
+//     var url = '${ip}/user/'
+// }
