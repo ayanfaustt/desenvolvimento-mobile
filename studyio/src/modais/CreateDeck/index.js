@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
+import { CreateNewDeck } from "../../hooks/useDeck";
 
 export function CreateDeck({ handleClose }) {
     const [deckName, setDeckName] = useState('');
@@ -14,7 +15,7 @@ export function CreateDeck({ handleClose }) {
             tagId: 1
         };
         try {
-            await CreateDeck(userId, data, ip).then(() => {
+            await CreateNewDeck(userId, data, ip).then(() => {
                 Toast.show({
                     type: 'success',
                     text1: 'Deck created successfully!'

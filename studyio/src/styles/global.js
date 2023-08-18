@@ -10,7 +10,7 @@ export const globalStyles = StyleSheet.create({
         height: 37,
         alignSelf: 'center',
         alignItems: 'center',
-        bottom: '10%'
+        bottom: '15%'
 
     },
     textButton:{

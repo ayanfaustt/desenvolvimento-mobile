@@ -6,7 +6,7 @@ export const ListDecks = (userId, ip) => {
     
 }
 
-export const CreateDeck = (userId, data, ip) => {
+export const CreateNewDeck = (userId, data, ip) => {
     var url = `${ip}/decks/create/${userId}`
     return axios.post(url, data)
     
