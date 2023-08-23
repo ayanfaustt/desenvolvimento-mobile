@@ -3,29 +3,25 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Modal } fro
 import { useNavigation } from '@react-navigation/native';
 import { RecoverModal } from '../../modais/RecoverPassword';
 import Toast from 'react-native-toast-message';
+import { useUser } from '../../hooks/useContextUserId';
+import { LoginUser } from '../../hooks/useUser';
+
 
 export function SingIn() {
     const navigation = useNavigation();
     const [visibleModal, setVisibleModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { userId, setUserId, ip } = useUser();
 
-    async function handleLogin(){
+    async function handleLogin() {
+        const data = {
+            username: username,
+            password: password
+        };
         try {
-            const response = await fetch('http://192.168.100.5:8000/session/login', {
-                method: 'POST',
-                headers:{
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            });
-            const jsonResponse = await response.json();
-            const userId = jsonResponse["userId"];
-            if (response.ok) {
+            await LoginUser(data, ip).then((response) => {
+                setUserId(response.data.userId);
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
@@ -34,71 +30,71 @@ export function SingIn() {
                 setTimeout(() => {
                     navigation.navigate('Temporary', { userId: userId });
                 }, 1500);
-            } else {
+            }).catch(() => {
                 Toast.show({
                     type: 'error',
                     text1: 'Invalid credentials!',
                 });
-            }
-        } catch(error) {
+            });
+        } catch (error) {
             console.error('Error occurred while login:', error);
-        }
-    }
+        };
+    };
 
     return (
         <View style={styles.container}>
-            <Toast/>
+            <Toast />
             <Image
                 source={require('../../assets/Logo2.png')}
-                style={{ width: '100%', marginTop: '15%', marginBottom: '15%'}}
+                style={{ width: '100%', marginTop: '15%', marginBottom: '15%' }}
                 resizeMode='contain'
             />
             <Text style={styles.title}>Username:</Text>
             <TextInput
                 style={styles.input}
-                value={username} 
-                onChangeText={setUsername}/>
-            
+                value={username}
+                onChangeText={setUsername} />
+
             <Text style={styles.title}>Password:</Text>
             <TextInput
                 style={styles.input}
-                value={password} 
+                value={password}
                 secureTextEntry={true}
-                onChangeText={setPassword}/>
+                onChangeText={setPassword} />
 
             <Modal
                 visible={visibleModal}
                 transparent={true}
-                onRequestClose={ () => setVisibleModal(false) }>
+                onRequestClose={() => setVisibleModal(false)}>
                 <RecoverModal
-                handleClose={ () => setVisibleModal(false) }/>
+                    handleClose={() => setVisibleModal(false)} />
             </Modal>
-            
+
             <TouchableOpacity>
                 <Text style={styles.textRecoverPass}
-                onPress={ () => setVisibleModal(true) }>Forgot your password?</Text>
+                    onPress={() => setVisibleModal(true)}>Forgot your password?</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-            style={styles.button}
-            onPress={ () => handleLogin()}>
+
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleLogin()}>
                 <Text style={styles.textButton}>Login</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity>
                 <Text style={styles.textRegister}
-                onPress={ () => navigation.navigate('SingUp')}>New? Register</Text>
+                    onPress={() => navigation.navigate('SingUp')}>New? Register</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         backgroundColor: '#F1F5F6',
     },
-    button:{
+    button: {
         justifyContent: 'center',
         backgroundColor: '#004257',
         borderRadius: 10,
@@ -109,19 +105,19 @@ const styles = StyleSheet.create({
         marginTop: 150
 
     },
-    textButton:{
+    textButton: {
         fontSize: 20,
         color: '#DAE9F1',
         alignItems: 'center'
     },
-    textRegister:{
+    textRegister: {
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'center',
         marginTop: 5,
         color: '#006699'
     },
-    textRecoverPass:{
+    textRecoverPass: {
         position: 'absolute',
         justifyContent: 'center',
         alignSelf: 'flex-start',
@@ -129,16 +125,16 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         color: '#006699'
     },
-    title:{
+    title: {
         fontSize: 16,
         marginLeft: 33,
         color: '#004257'
     },
-    input:{
-       backgroundColor: '#A4C3DA',
-       marginLeft: 30,
-       marginRight: 30,
-       borderRadius: 10,
-       padding: 2
+    input: {
+        backgroundColor: '#A4C3DA',
+        marginLeft: 30,
+        marginRight: 30,
+        borderRadius: 10,
+        padding: 2
     }
 })
