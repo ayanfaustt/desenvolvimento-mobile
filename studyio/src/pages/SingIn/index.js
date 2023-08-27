@@ -12,7 +12,7 @@ export function SingIn() {
     const [visibleModal, setVisibleModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { userId, setUserId, ip, token, setToken } = useUser();
+    const { userId, setUserId, ip, token, setToken, setUserName } = useUser();
 
     async function handleLogin() {
         const data = {
@@ -24,6 +24,7 @@ export function SingIn() {
             await LoginUser(data, ip).then((response) => {
                 setUserId(response.data.userId);
                 setToken(response.data.token);
+                setUserName(response.data.username);
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
