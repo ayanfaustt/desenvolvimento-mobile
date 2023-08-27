@@ -34,7 +34,6 @@ export function SingIn() {
                     navigation.navigate('Temporary', { userId: userId});
                 }, 1500);
             }).catch((error) => {
-                console.log(error);
                 Toast.show({
                     type: 'error',
                     text1: 'Invalid credentials!',
