@@ -1,20 +1,22 @@
 import React, { createContext, useState, useContext } from 'react';
-
+import { env } from '../../env.config';
 
 const UserContext = createContext({
   userId: null,
   setUserId: () => {},
   ip: null,
+  token: null,
+  setToken: () => {}
 });
 
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
-  // const ip = 'http://192.168.100.5:8000' // diogo
-  const ip = 'http://192.168.0.165:8000' // querem
+  const [token, setToken] = useState(null);
+  const ip = env.ip;
 
   return (
-    <UserContext.Provider value={{ userId, setUserId, ip }}>
+    <UserContext.Provider value={{ userId, setUserId, ip, token, setToken }}>
       {children}
     </UserContext.Provider>
   );

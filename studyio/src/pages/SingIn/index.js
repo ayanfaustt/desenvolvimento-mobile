@@ -12,7 +12,7 @@ export function SingIn() {
     const [visibleModal, setVisibleModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { userId, setUserId, ip } = useUser();
+    const { userId, setUserId, ip, token, setToken } = useUser();
 
     async function handleLogin() {
         const data = {
@@ -20,17 +20,20 @@ export function SingIn() {
             password: password
         };
         try {
+            console.log(ip);
             await LoginUser(data, ip).then((response) => {
                 setUserId(response.data.userId);
+                setToken(response.data.token);
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
                     text2: `Welcome ${username}!`
                 });
                 setTimeout(() => {
-                    navigation.navigate('Temporary', { userId: userId });
+                    navigation.navigate('Temporary', { userId: userId});
                 }, 1500);
-            }).catch(() => {
+            }).catch((error) => {
+                console.log(error);
                 Toast.show({
                     type: 'error',
                     text1: 'Invalid credentials!',
