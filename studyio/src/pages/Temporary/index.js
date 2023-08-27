@@ -35,7 +35,7 @@ export function Temporary() {
             </TouchableOpacity>
             <TouchableOpacity 
                 style={styles.button}
-                onPress={ () => navigation.navigate('StudyMaterial')}>
+                onPress={ () => navigation.navigate('StudyMaterial', {userId: userId})}>
                     <Text style={globalStyles.textButton}>Study Material</Text>
             </TouchableOpacity>
             <TouchableOpacity 
