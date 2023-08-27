@@ -5,7 +5,7 @@ import { RecoverModal } from '../../modais/RecoverPassword';
 import Toast from 'react-native-toast-message';
 import { useUser } from '../../hooks/useContextUserId';
 import { LoginUser } from '../../hooks/useUser';
-
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export function SingIn() {
     const navigation = useNavigation();
@@ -31,7 +31,7 @@ export function SingIn() {
                     text2: `Welcome ${username}!`
                 });
                 setTimeout(() => {
-                    navigation.navigate('Temporary', { userId: userId});
+                    navigation.navigate('MainStack', { screen: 'Dashboard' ,userId: userId});
                 }, 1500);
             }).catch((error) => {
                 Toast.show({

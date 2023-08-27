@@ -10,8 +10,10 @@ import { UserProvider } from './src/hooks/useContextUserId';
 export default function App() {
   return (
     <NavigationContainer>
-        <StatusBar backgroundColor="#F1F5F6" barStyle="dark-content" />
-        <Routes />
+        <UserProvider>
+          <StatusBar backgroundColor="#F1F5F6" barStyle="dark-content" />
+          <Routes />
+        </UserProvider>
     </NavigationContainer>
   );
 }
