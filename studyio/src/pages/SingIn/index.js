@@ -5,14 +5,14 @@ import { RecoverModal } from '../../modais/RecoverPassword';
 import Toast from 'react-native-toast-message';
 import { useUser } from '../../hooks/useContextUserId';
 import { LoginUser } from '../../hooks/useUser';
-
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export function SingIn() {
     const navigation = useNavigation();
     const [visibleModal, setVisibleModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { userId, setUserId, ip } = useUser();
+    const { userId, setUserId, ip, token, setToken, setUserName } = useUser();
 
     async function handleLogin() {
         const data = {
@@ -20,17 +20,20 @@ export function SingIn() {
             password: password
         };
         try {
+            console.log(ip);
             await LoginUser(data, ip).then((response) => {
                 setUserId(response.data.userId);
+                setToken(response.data.token);
+                setUserName(response.data.username);
                 Toast.show({
                     type: 'success',
                     text1: 'Login successfully!',
                     text2: `Welcome ${username}!`
                 });
                 setTimeout(() => {
-                    navigation.navigate('Temporary', { userId: userId });
+                    navigation.navigate('MainStack', { screen: 'Dashboard' ,userId: userId});
                 }, 1500);
-            }).catch(() => {
+            }).catch((error) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Invalid credentials!',
