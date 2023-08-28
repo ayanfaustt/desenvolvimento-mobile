@@ -12,8 +12,6 @@
 
         const { username } = useUser();
 
-        const [isTextPressed, setIsTextPressed] = useState(false);
-
         const [visibleModal, setVisibleModal] = useState(false);
 
         const [visibleModal2, setVisibleModal2] = useState(false);
