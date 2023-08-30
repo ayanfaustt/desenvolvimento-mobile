@@ -2,40 +2,44 @@ import {React, useState} from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Image, SafeAreaView, TextInput } from "react-native";
 import { globalStyles } from '../../styles/global';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import { useUser } from '../../hooks/useContextUserId';
+import { Updatepassword } from '../../hooks/useUser';
 
 export function ChangepassModal ({ handleClose }) {
 
-    const [password, setPassword] = useState('');
-    const [newpassword, setNewPassword] = useState('')
+    const navigation = useNavigation();
+    const { password } = useUser('');
+    const [new_password, setNewPassword] = useState('')
+    const { ip } = useUser();
 
-//     async function handleChagePassword() {
-//         const data = {
-//             password: password,
-//             newpassword: password
-//         };
-//         if (password === newpassword) {
-//          console.error('Passwords are equals!');
-//         } else {
-//             try {
-//              await UpdatePassword(password, data, ip).then(() => {
-//                 Toast.show({
-//                     type: 'sucess',
-//                     text1: 'Password changed sucessfully'
-//                 });
-//                 setTimeout(() => {
-//                     navigation.navigate('Account');
-//                 }, 1500);
-//              }).catch(() => {
-//                 Toast.show({
-//                     type: 'error',
-//                     text1: 'Failed to change password',
-//                 });
-//              });
-//         } catch (error) {
-//             console.error('Error occurred while updating password:', error);
-//         };
-//     };
-// };
+    async function handleUpdatePassword() {
+        const data = {
+            password: password
+        };
+        if (new_password === password) {
+            console.error('Same password!');
+        } else {
+            try {
+                await Updatepassword(password, data, ip).then(() => {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Password updated successfully!',
+                    });
+                    setTimeout(() => {
+                        navigation.navigate('Account');
+                    }, 1500);
+                }).catch(() => {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Failed at updating password!',
+                    });
+                })
+            } catch (error) {
+                console.error('Error occurred while updating password:', error);
+            };
+        };
+    };
 
     return (
             <SafeAreaView style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', height: 1000}}>
@@ -51,12 +55,21 @@ export function ChangepassModal ({ handleClose }) {
 
                 <View style={styles.container}>
                     <Text style={styles.title}>Currently Password</Text>
-                    <TextInput style={styles.text_input} secureTextEntry={true}></TextInput>
+                    <TextInput style={styles.text_input} 
+                    secureTextEntry={true}
+                    value={password}
+                    ></TextInput>
 
                     <Text style={styles.title2}>New Password</Text>
-                    <TextInput style={styles.text_input2} secureTextEntry={true}></TextInput>
+                    <TextInput style={styles.text_input2} 
+                    secureTextEntry={true}
+                    value={new_password}
+                    onChangeText={setNewPassword}
+                    ></TextInput>
                     
-                    <TouchableOpacity style={styles.button_save} onPress={ handleClose }>
+                    <TouchableOpacity 
+                        style={styles.button_save} 
+                        onPress={ handleUpdatePassword }>
                         <Text style={globalStyles.textButton}>Change</Text>
                     </TouchableOpacity>
                 </View>
