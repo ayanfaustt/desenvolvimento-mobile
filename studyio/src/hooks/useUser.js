@@ -14,14 +14,21 @@ export const CreateUser = (username, data, ip) => {
 
 // Alteração de nome de usuário
 
-export const UpdateUsername = (username, data, ip) => {
-    var url = `${ip}/user/update/${username}`
+export const UpdateUsername = (userId, data, ip) => {
+    var url = `${ip}/user/update/${userId}`
     return axios.put(url, data)
 }
 
 // Alteração de senha
 
-export const Updatepassword = (password, data, ip) => {
-    var url = '${ip}/user/'
+export const Updatepassword = (userId, data, ip) => {
+    var url = `${ip}/user/password/${userId}`
+    return axios.put(url, data)
+}
+
+// Alteração de email
+
+export const UpdateEmail = (userId, data, ip) => {
+    var url = `${ip}/user/email/${userId}`
     return axios.put(url, data)
 }
