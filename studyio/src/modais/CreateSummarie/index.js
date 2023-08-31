@@ -1,11 +1,12 @@
 import { React, useState, useEffect } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
 import { useUser } from '../../hooks/useContextUserId';
-import { ListTags, CreateNewSummarie } from '../../hooks/useSummarie';
+import { CreateNewSummarie } from '../../hooks/useSummarie';
+import { ListTags } from '../../hooks/useTag';
 import RNPickerSelect from 'react-native-picker-select';
 
 export function CreateSummarie({ handleClose }) {
-    const { userId, ip } = useUser('');
+    const { userId, ip, token } = useUser('');
     const [data, setData] = useState({ summarieName: "", tagId: "1", summarieContent: "" });
     const [selectedTag, setSelectedTag] = useState(null);
     const [tagOptions, setTagOptions] = useState([]);
@@ -14,7 +15,7 @@ export function CreateSummarie({ handleClose }) {
     async function handleCreateSummarie() {
 
         try {
-            await CreateNewSummarie(userId, data, ip).then((res => {
+            await CreateNewSummarie(userId, data, ip, token).then((res => {
                 // console.log(res)
                 handleClose()
 
@@ -41,7 +42,7 @@ export function CreateSummarie({ handleClose }) {
     useEffect(() => {
         async function fetchTagOptions() {
             try {
-                const response = await ListTags(userId, ip);
+                const response = await ListTags(userId, ip, token);
                 const options = response.data.map(tag => ({
                     label: tag.tag_name,
                     value: tag.id,
@@ -172,7 +173,6 @@ const styles = StyleSheet.create({
     },
     inputGrande: {
         backgroundColor: '#A4C3DA',
-        minHeigh: 100,
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 10,

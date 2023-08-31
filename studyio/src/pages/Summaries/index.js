@@ -12,7 +12,7 @@ export function Summaries() {
     const [summarieList, setSummarieList] = useState([]);
     const [visibleModal, setVisibleModal] = useState(false);
     const [visibleModal2, setVisibleModal2] = useState(false);
-    const { userId, ip } = useUser();
+    const { userId, ip, token } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -20,18 +20,23 @@ export function Summaries() {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                await ListSummaries(userId, ip).then((res) => {
-                    setSummarieList(res.data);
-                }).catch((error) => {
-                    console.error('Error fetching data:', error);
-                });
-            } catch (error) {
-                console.error('Error occurred while list summaries: ', error);
-            };
+            handleListSummarie();
         };
+
         fetchData();
     }, []);
+
+    async function handleListSummarie() {
+        try {
+            await ListSummaries(userId, ip, token).then((res) => {
+                setSummarieList(res.data);
+            }).catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+        } catch (error) {
+            console.error('Error occurred while list summaries: ', error);
+        };
+    };
 
     async function handleOpenSummarie() {
         navigation.navigate('Summaries');
@@ -59,7 +64,11 @@ export function Summaries() {
                 transparent={true}
                 onRequestClose={() => setVisibleModal(false)}>
                 <CreateSummarie
-                    handleClose={() => setVisibleModal(false)} />
+                    handleClose={() => {
+                        setVisibleModal(false);
+                        handleListSummarie();
+                        
+                        }} />
             </Modal>
             <Modal
                 visible={visibleModal2}
