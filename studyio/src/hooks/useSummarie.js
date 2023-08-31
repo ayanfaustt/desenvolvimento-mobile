@@ -21,3 +21,14 @@ export const CreateNewSummarie = (userId, data, ip, token) => {
     return axios.post(url, data, authorization)
     
 }
+
+export const DeleteSummarie = (summarieId, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/summaries/delete/${summarieId}`
+    return axios.delete(url, authorization);
+    
+}

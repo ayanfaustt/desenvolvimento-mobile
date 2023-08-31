@@ -4,8 +4,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateSummarie } from '../../modais/CreateSummarie';
 import { CreateTag } from '../../modais/CreateTag';
-import { ListSummaries } from '../../hooks/useSummarie';
+import { ListSummaries, DeleteSummarie } from '../../hooks/useSummarie';
 import { useUser } from '../../hooks/useContextUserId';
+import Toast from 'react-native-toast-message';
 
 export function Summaries() {
     const navigation = useNavigation();
@@ -42,11 +43,33 @@ export function Summaries() {
         navigation.navigate('SummarieOpen', {item});
     };
 
+    async function handleDeleteSummarie(summarieId) {
+        try {
+            await DeleteSummarie(summarieId, ip, token).then((response) => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Deck deleted successfully!'
+                });
+                handleListSummarie();
+            }).catch((err) => {
+                console.log('deu errado')
+                console.log('Error fetching data:', err);
+            })
+        } catch (error) {
+            console.error('Error occurred while delete deck: ', error);
+        }
+    }
+
     const renderItem = ({ item }) => (
         <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie(item)}>
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
+                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'flex-end'}} onPress={() => handleDeleteSummarie(item.id)}>
+                    <Image
+                        source={require('../../assets/trash.png')}
+                    />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
