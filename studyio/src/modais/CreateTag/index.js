@@ -1,29 +1,32 @@
 import { React, useState } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image } from "react-native";
+import { CreateNewTag } from "../../hooks/useTag";
+import { useUser } from "../../hooks/useContextUserId";
+import Toast from 'react-native-toast-message';
 
 export function CreateTag({ handleClose, data }) {
     const [tag, setTag] = useState('');
+    const { userId, ip, token } = useUser();
 
-    async function handleCreateDeck(){
+    async function handleCreateTag(){
+        const data = {
+            tagName: tag
+        }
         try {
-            const response = await fetch(`http://192.168.1.114:3000/tags/create/:${1}`, {
-                method: 'POST',
-                headers:{
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    tagName: tag
-                })
-            });
-            if (response.ok) {
-                console.log('deu bom');
-                handleClose
-            } else {
-                console.log('deu merda')
-            }
+            await CreateNewTag(userId, data, ip, token).then(() => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Tag created successfully!'
+                });
+                handleClose();
+            }).catch(() => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Tag already exist!',
+                });
+            })
         } catch(error) {
-            console.error('Error occurred while create deck:', error);
+            console.error('Error occurred while create tag:', error);
         }
     }
 
@@ -48,10 +51,11 @@ export function CreateTag({ handleClose, data }) {
             <View>
                 <TouchableOpacity 
                     style={styles.addButton}
-                    onPress={ () => handleCreateDeck()}>
+                    onPress={ () => handleCreateTag()}>
                     <Text style={styles.textButton}>Add</Text>
                 </TouchableOpacity>
             </View>
+            <Toast />
         </SafeAreaView>
     )
 }

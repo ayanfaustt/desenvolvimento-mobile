@@ -11,19 +11,24 @@ export const ListDecks = (userId, ip, token) => {
     
 }
 
-export const CreateNewDeck = (userId, data, ip) => {
-    var url = `${ip}/decks/create/${userId}`
-    return axios.post(url, data);
-    
-}
-
-export const DeleteDeck = (deckId, data, ip, token) => {
+export const CreateNewDeck = (userId, data, ip, token) => {
     const authorization = {
 		headers: {
 			'Authorization': `Bearer ${token}`,
 		}
 	};
-    var url = `${ip}/decks/create/${deckId}`
-    return axios.delete(url, data, authorization);
+    var url = `${ip}/decks/create/${userId}`
+    return axios.post(url, data, authorization);
+    
+}
+
+export const DeleteDeck = (deckId, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/decks/delete/${deckId}`
+    return axios.delete(url, authorization);
     
 }

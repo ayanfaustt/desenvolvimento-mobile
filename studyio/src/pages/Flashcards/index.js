@@ -6,6 +6,7 @@ import { CreateDeck } from '../../modais/CreateDeck';
 import { CreateTag } from '../../modais/CreateTag';
 import { ListDecks, DeleteDeck } from '../../hooks/useDeck';
 import { useUser } from '../../hooks/useContextUserId';
+import Toast from 'react-native-toast-message';
 
 export function Flashcards() {
     const navigation = useNavigation();
@@ -20,21 +21,25 @@ export function Flashcards() {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                await ListDecks(userId, ip, token).then((response) => {
-                    const data = response.data;
-                    setDeckList(data);
-                }).catch((err) => {
-                    console.log('Error fetching data:', err);
-                })
-
-            } catch (error) {
-                console.error('Error occurred while list decks: ', error);
-            }
+            handleListDeck();
         };
 
         fetchData();
     }, []);
+
+    async function handleListDeck() {
+        try {
+            await ListDecks(userId, ip, token).then((response) => {
+                const data = response.data;
+                setDeckList(data);
+            }).catch((err) => {
+                console.log('Error fetching data:', err);
+            })
+
+        } catch (error) {
+            console.error('Error occurred while list decks: ', error);
+        }
+    }
 
     async function handleOpenDeck(item) {
         navigation.navigate('Decks', {item});
@@ -43,7 +48,13 @@ export function Flashcards() {
     async function handleDeleteDeck(deckId) {
         try {
             await DeleteDeck(deckId, ip, token).then((response) => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Deck deleted successfully!'
+                });
+                handleListDeck();
             }).catch((err) => {
+                console.log('deu errado')
                 console.log('Error fetching data:', err);
             })
         } catch (error) {
@@ -76,9 +87,14 @@ export function Flashcards() {
             <Modal
                 visible={visibleModal}
                 transparent={true}
-                onRequestClose={() => setVisibleModal(false)}>
+                onRequestClose={() => {
+                    setVisibleModal(false);
+                    handleListDeck();
+                    }}>
                 <CreateDeck
-                    handleClose={() => setVisibleModal(false)} />
+                    handleClose={() => {
+                    setVisibleModal(false);
+                    handleListDeck();}} />
             </Modal>
             <Modal
                 visible={visibleModal2}
@@ -105,6 +121,7 @@ export function Flashcards() {
             <TouchableOpacity style={globalStyles.floatingButton} onPress={toggleMenu}>
                 <Text style={globalStyles.buttonText}>+</Text>
             </TouchableOpacity>
+        <Toast />
         </View>
     )
 }
