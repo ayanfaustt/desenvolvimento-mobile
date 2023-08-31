@@ -4,24 +4,23 @@ import { globalStyles } from '../../styles/global';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { useUser } from '../../hooks/useContextUserId';
-import { Updatepassword } from '../../hooks/useUser';
+import { UpdateUser } from '../../hooks/useUser';
 
 export function ChangepassModal ({ handleClose }) {
 
     const navigation = useNavigation();
-    const { password } = useUser('');
     const [new_password, setNewPassword] = useState('')
     const { ip } = useUser();
 
     async function handleUpdatePassword() {
         const data = {
-            password: password
+            password: new_password
         };
-        if (new_password === password) {
-            console.error('Same password!');
+        if (!new_password) {
+            console.error('Password cannot be null!');
         } else {
             try {
-                await Updatepassword(password, data, ip).then(() => {
+                await UpdateUser(new_password, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'Password updated successfully!',
@@ -54,11 +53,6 @@ export function ChangepassModal ({ handleClose }) {
                 </View>
 
                 <View style={styles.container}>
-                    <Text style={styles.title}>Currently Password</Text>
-                    <TextInput style={styles.text_input} 
-                    secureTextEntry={true}
-                    value={password}
-                    ></TextInput>
 
                     <Text style={styles.title2}>New Password</Text>
                     <TextInput style={styles.text_input2} 
@@ -113,35 +107,13 @@ const styles = StyleSheet.create({
         top: 385,
         flexDirection: 'row',
     },
-    title: {
-        fontSize: 18,
-        position: 'absolute',
-        color: '#DAE9F1',
-        alignItems: 'center',
-        alignSelf: 'center',
-        top: 15
-    },
     title2: {
         fontSize: 18,
         position: 'absolute',
         color: '#DAE9F1',
         alignItems: 'center',
         alignSelf: 'center',
-        top: 90
-    },
-    text_input: {
-        position: 'absolute',
-        borderWidth: 2,
-        borderRadius: 100,
-        borderColor: '#DAE9F1',
-        width: 190,
-        height: 30,
-        alignSelf: 'center',
-        top: 45,
-        alignContent:'center',
-        fontSize: 14,
-        textAlign: 'center',
-        color: '#DAE9F1'
+        top: 40
     },
     text_input2: {
         position: 'absolute',
@@ -151,7 +123,7 @@ const styles = StyleSheet.create({
         width: 190,
         height: 30,
         alignSelf: 'center',
-        top: 120,
+        top: 80,
         alignContent:'center',
         fontSize: 14,
         textAlign: 'center',

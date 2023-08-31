@@ -6,24 +6,24 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { UpdateUser } from '../../hooks/useUser';
 
-export function ChangeusernameModal ({ handleClose}) {
+export function ChangeEmailModal ({ handleClose}) {
     const navigation = useNavigation();
-    const [new_username, setUsername] = useState('');
-    const { username } = useUser();
+    const [new_email, setEmail] = useState('');
+    const { email } = useUser();
     const { userId, ip } = useUser();
 
-    async function handleUpdateUsername() {
+    async function handleUpdateEmail() {
         const data = {
-            new_username: new_username
+            new_email: new_email
         };
-        if (username === new_username) {
-            console.error('Same username!');
+        if (!new_email) {
+            console.error('E-mail cannot be null!');
         } else {
             try {
                 await UpdateUser(userId, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
-                        text1: 'User updated successfully!',
+                        text1: 'E-mail updated successfully!',
                     });
                     setTimeout(() => {
                         navigation.navigate('Account');
@@ -31,20 +31,20 @@ export function ChangeusernameModal ({ handleClose}) {
                 }).catch(() => {
                     Toast.show({
                         type: 'error',
-                        text1: 'Username already exist!',
+                        text1: 'E-mail already exist!',
                     });
                 })
             } catch (error) {
-                console.error('Error occurred while updating username:', error);
+                console.error('Error occurred while updating E-mail:', error);
             };
         };
     };
-
+    
     return (
         <SafeAreaView style={{backgroundColor: 'rgba(0, 0, 0, 0.2)', height: 1000}}>
             <View style={styles.container2}>
             <View style={styles.button}>
-                    <Text style={globalStyles.textButton}>Change username</Text>
+                    <Text style={globalStyles.textButton}>Change E-mail</Text>
                     </View>
                     <TouchableOpacity onPress={handleClose}>
                         <Image 
@@ -55,15 +55,15 @@ export function ChangeusernameModal ({ handleClose}) {
             </View>
 
             <View style={styles.container}>
-                    <Text style={styles.title}>New Username</Text>
+                    <Text style={styles.title}>New E-mail</Text>
                     <TextInput 
                     style={styles.text_input}
-                    value={new_username}
-                    onChangeText={setUsername}
+                    value={new_email}
+                    onChangeText={setEmail}
                     ></TextInput>
                     <TouchableOpacity style={styles.button_save}>
                         <Text style={globalStyles.textButton}
-                        onPress={() => handleUpdateUsername()}
+                        onPress={() => handleUpdateEmail()}
                         >Change</Text>
                     </TouchableOpacity>
                 </View>

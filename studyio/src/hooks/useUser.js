@@ -14,14 +14,7 @@ export const CreateUser = (username, data, ip) => {
 
 // Alteração de nome de usuário
 
-export const UpdateUsername = (username, data, ip) => {
-    var url = `${ip}/user/update/${username}`
-    return axios.put(url, data)
-}
-
-// Alteração de senha
-
-export const Updatepassword = (password, data, ip) => {
-    var url = '${ip}/user/'
+export const UpdateUser = (userId, data, ip) => {
+    var url = `${ip}/user/update/${userId}`
     return axios.put(url, data)
 }

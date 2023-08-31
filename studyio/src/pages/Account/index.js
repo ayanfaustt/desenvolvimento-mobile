@@ -1,11 +1,12 @@
     import { React, useState } from 'react';
     import { View, Text, StyleSheet, TouchableOpacity, Image, Modal} from 'react-native';
     import { globalStyles } from '../../styles/global';
-    import { Changeiconmodal } from '../../modais/Changeicon';
+    import { useUser } from '../../hooks/useContextUserId';
     import { useNavigation } from '@react-navigation/native';
     import { ChangepassModal } from '../../modais/Changepassword';
+    import { ChangeEmailModal } from '../../modais/Changeemail';
     import { ChangeusernameModal } from '../../modais/Changeusername';
-    import { useUser } from '../../hooks/useContextUserId';
+    import { Changeiconmodal } from '../../modais/Changeicon';
 
     export function Account() {
         const [selectedIcon, setSelectedIcon] = useState(null);
@@ -17,6 +18,8 @@
         const [visibleModal2, setVisibleModal2] = useState(false);
 
         const [visibleModal3, setVisibleModal3] = useState(false);
+
+        const [visibleModal4, setVisibleModal4] = useState(false);
 
         const navigation = useNavigation();
 
@@ -56,7 +59,7 @@
                             <Image
                                 source={require('../../assets/user-icon.png')}
                                 style={{}} />
-                            <Text style={styles.input}>{username}</Text>
+                            <Text style={styles.input}> {username}</Text>
                         </View>
                         <TouchableOpacity onPress={() => setVisibleModal3(true)}>
                             <Image
@@ -70,14 +73,14 @@
                     <View style={styles.fieldsInside}>
                         <View style={styles.iconInput}>
                             <Image
-                                source={require('../../assets/settings.png')}
+                                source={require('../../assets/mail.png')}
                                 style={{}} />
-                            <Text style={styles.input}> Language</Text>
-                            <TouchableOpacity>
-                                <Image
-                                    source={require('../../assets/language.png')}
-                                    style={{top: -5, height: 25, borderRadius: 5}}/>
-                            </TouchableOpacity>
+                            <Text style={styles.input}> E-mail</Text>
+                        <TouchableOpacity onPress={() => setVisibleModal4(true)}>
+                            <Image
+                                source={require('../../assets/edit-2.png')}
+                                style={{left: 20}} />
+                        </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -122,6 +125,14 @@
                     onRequestClose={() => setVisibleModal3(false)}>
                             <ChangeusernameModal
                             handleClose={() => setVisibleModal3(false)}/>
+                </Modal>
+
+                <Modal
+                    visible={visibleModal4}
+                    transparent={true}
+                    onRequestClose={() => setVisibleModal4(false)}>
+                            <ChangeEmailModal
+                            handleClose={() => setVisibleModal4(false)}/>
                 </Modal>
 
             </View>
