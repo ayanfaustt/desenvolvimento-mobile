@@ -4,7 +4,7 @@ import { globalStyles } from '../../styles/global';
 import { useUser } from '../../hooks/useContextUserId';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import { UpdateUsername } from '../../hooks/useUser';
+import { UpdateUser } from '../../hooks/useUser';
 
 export function ChangeusernameModal ({ handleClose}) {
     const navigation = useNavigation();
@@ -20,7 +20,7 @@ export function ChangeusernameModal ({ handleClose}) {
             console.error('Same username!');
         } else {
             try {
-                await UpdateUsername(userId, data, ip).then(() => {
+                await UpdateUser(userId, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'User updated successfully!',

@@ -4,7 +4,7 @@ import { globalStyles } from '../../styles/global';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { useUser } from '../../hooks/useContextUserId';
-import { Updatepassword } from '../../hooks/useUser';
+import { UpdateUser } from '../../hooks/useUser';
 
 export function ChangepassModal ({ handleClose }) {
 
@@ -20,7 +20,7 @@ export function ChangepassModal ({ handleClose }) {
             console.error('Password cannot be null!');
         } else {
             try {
-                await Updatepassword(new_password, data, ip).then(() => {
+                await UpdateUser(new_password, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'Password updated successfully!',

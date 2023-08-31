@@ -4,7 +4,7 @@ import { globalStyles } from '../../styles/global';
 import { useUser } from '../../hooks/useContextUserId';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import { UpdateEmail } from '../../hooks/useUser';
+import { UpdateUser } from '../../hooks/useUser';
 
 export function ChangeEmailModal ({ handleClose}) {
     const navigation = useNavigation();
@@ -16,11 +16,11 @@ export function ChangeEmailModal ({ handleClose}) {
         const data = {
             new_email: new_email
         };
-        if (email === new_email) {
-            console.error('Same E-mail!');
+        if (!new_email) {
+            console.error('E-mail cannot be null!');
         } else {
             try {
-                await UpdateEmail(userId, data, ip).then(() => {
+                await UpdateUser(userId, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'E-mail updated successfully!',
