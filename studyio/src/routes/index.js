@@ -13,6 +13,7 @@ import { Account } from '../pages/Account';
 import { Decks } from '../pages/Decks';
 import { Temporary } from '../pages/Temporary';
 import { Cards } from '../pages/Cards';
+import { SummarieOpen } from '../pages/SummarieOpen';
 
 
 const Stack = createNativeStackNavigator();
@@ -49,6 +50,11 @@ function AuthStack() {
             <Stack.Screen
             name="Cards"
             component={Cards}
+            options={{ headerShown: false }}
+            />
+            <Stack.Screen
+            name="SummarieOpen"
+            component={SummarieOpen}
             options={{ headerShown: false }}
             />
       </Stack.Navigator>

@@ -38,12 +38,12 @@ export function Summaries() {
         };
     };
 
-    async function handleOpenSummarie() {
-        navigation.navigate('Summaries');
+    async function handleOpenSummarie(item) {
+        navigation.navigate('SummarieOpen', {item});
     };
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie()}>
+        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie(item)}>
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
