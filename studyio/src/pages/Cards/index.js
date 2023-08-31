@@ -44,7 +44,7 @@ export function Cards() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={globalStyles.tittlePage}>Deck Name</Text>
+            <Text style={globalStyles.tittlePage}>BNANANANAN</Text>
             <View style={globalStyles.tag}>
                 <Text style={globalStyles.tagText}>Tag Name</Text>
                 <Text style={globalStyles.tagLine}></Text>

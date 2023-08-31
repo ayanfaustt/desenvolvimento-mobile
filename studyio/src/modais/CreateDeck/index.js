@@ -1,25 +1,29 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
 import { CreateNewDeck } from "../../hooks/useDeck";
+import { ListTags } from "../../hooks/useTag";
+import RNPickerSelect from 'react-native-picker-select';
 
 export function CreateDeck({ handleClose }) {
     const [deckName, setDeckName] = useState('');
-    const [tag, setTag] = useState('');
-    const { userId, ip } = useUser();
+    const [selectedTag, setSelectedTag] = useState(null);
+    const [tagOptions, setTagOptions] = useState([]);
+    const { userId, ip, token } = useUser();
 
     async function handleCreateDeck(){
         const data = {
             deckName: deckName,
-            tagId: 1
+            tagId: selectedTag
         };
         try {
-            await CreateNewDeck(userId, data, ip).then(() => {
+            await CreateNewDeck(userId, data, ip, token).then(() => {
                 Toast.show({
                     type: 'success',
                     text1: 'Deck created successfully!'
                 });
+                handleClose();
             }).catch(() => {
                 Toast.show({
                     type: 'error',
@@ -31,6 +35,25 @@ export function CreateDeck({ handleClose }) {
         }
     }
 
+    async function handleListTag() {
+        try {
+            const response = await ListTags(userId, ip, token);
+            const data = response.data;
+            const tagOptions = data.map(tag => ({ label: tag.tag_name, value: tag.id }));
+            setTagOptions(tagOptions);
+        } catch (error) {
+            console.error('Error occurred while list tags: ', error);
+        }
+    }
+
+    function handleInputChange(name, value) {
+        setSelectedTag(value);
+    }
+
+    useEffect(() => {
+        handleListTag();
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.cardHeader}>
@@ -39,7 +62,7 @@ export function CreateDeck({ handleClose }) {
             <TouchableOpacity onPress={handleClose}>
                 <Image
                 source={require('../../assets/x.png')}
-                style={{position: 'absolute', marginLeft: 280, bottom: 100}}
+                style={{ position: 'relative', marginLeft: 270, bottom: 0 }}
                 resizeMode='contain'/>
             </TouchableOpacity>
             <Text style={styles.title}>Deck name:</Text>
@@ -47,8 +70,21 @@ export function CreateDeck({ handleClose }) {
                 style={styles.input}
                 value={deckName}
                 onChangeText={setDeckName}/>
-            <View>
-            </View>
+            <Text style={styles.title}>Tag:</Text>
+                <View style={styles.tagInput}>
+                    <RNPickerSelect
+                        onValueChange={(value) => handleInputChange('tagId', value)}
+                        items={tagOptions}
+                        onOpen={() => setSelectedTag(null)}
+                        placeholder={{ label: 'Selecione uma tag', value: null }}
+                        style={{
+                            placeholder: {
+                                color: '#004257'
+                            },
+                        }}
+                        hideDoneBar
+                    />
+                </View>
             <View>
                 <TouchableOpacity 
                     style={styles.addButton}
@@ -56,6 +92,7 @@ export function CreateDeck({ handleClose }) {
                     <Text style={styles.textButton}>Add</Text>
                 </TouchableOpacity>
             </View>
+            <Toast />
         </SafeAreaView>
     )
 }
@@ -63,15 +100,15 @@ export function CreateDeck({ handleClose }) {
 const styles = StyleSheet.create({
     container:{
         width: 307,
-        height: 260,
         borderRadius: 10,
         marginTop: 250,
         justifyContent: 'center',
         alignSelf: 'center',
-        backgroundColor:'#F1F5F6',
+        backgroundColor: '#F1F5F6',
         borderColor: '#004257',
         borderWidth: 0.5,
-        
+        paddingTop: 20,
+        paddingBottom: 60
     },
     cardHeader:{
         backgroundColor: '#004257',
@@ -90,8 +127,9 @@ const styles = StyleSheet.create({
         height: 37,
         width: 132,
         alignSelf: 'center',
-        position: 'absolute',
-        top: 70,
+        position: 'relative',
+        top: 20,
+        bottom: 20,
         justifyContent: 'center'
     },
     textButton:{
@@ -102,7 +140,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 33,
         color: '#004257',
-        marginTop: '-20%'
+        marginTop: 5
     },
     input:{
         backgroundColor: '#A4C3DA',
@@ -110,5 +148,13 @@ const styles = StyleSheet.create({
         marginRight: 30,
         borderRadius: 10,
         padding: 2
-    }
+    },
+    tagInput: {
+        backgroundColor: '#A4C3DA',
+        // height: 30,
+        marginLeft: 30,
+        marginRight: 30,
+        borderRadius: 10,
+        
+    },
 })
