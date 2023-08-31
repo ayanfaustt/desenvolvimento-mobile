@@ -58,7 +58,7 @@ export function ChangeusernameModal ({ handleClose}) {
                     <Text style={styles.title}>New Username</Text>
                     <TextInput 
                     style={styles.text_input}
-                    value={username}
+                    value={new_username}
                     onChangeText={setUsername}
                     ></TextInput>
                     <TouchableOpacity style={styles.button_save}>
