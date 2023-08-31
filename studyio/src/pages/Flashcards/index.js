@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateDeck } from '../../modais/CreateDeck';
 import { CreateTag } from '../../modais/CreateTag';
-import { ListDecks } from '../../hooks/useDeck';
+import { ListDecks, DeleteDeck } from '../../hooks/useDeck';
 import { useUser } from '../../hooks/useContextUserId';
 
 export function Flashcards() {
@@ -12,7 +12,7 @@ export function Flashcards() {
     const [deckList, setDeckList] = useState([]);
     const [visibleModal, setVisibleModal] = useState(false);
     const [visibleModal2, setVisibleModal2] = useState(false);
-    const { userId, ip } = useUser();
+    const { userId, ip, token } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -21,7 +21,7 @@ export function Flashcards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await ListDecks(userId, ip).then((response) => {
+                await ListDecks(userId, ip, token).then((response) => {
                     const data = response.data;
                     setDeckList(data);
                 }).catch((err) => {
@@ -40,11 +40,27 @@ export function Flashcards() {
         navigation.navigate('Decks', {item});
     }
 
+    async function handleDeleteDeck(deckId) {
+        try {
+            await DeleteDeck(deckId, ip, token).then((response) => {
+            }).catch((err) => {
+                console.log('Error fetching data:', err);
+            })
+        } catch (error) {
+            console.error('Error occurred while delete deck: ', error);
+        }
+    }
+
     const renderItem = ({ item }) => (
         <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenDeck(item)}>
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.deck_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
+                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'flex-end'}} onPress={() => handleDeleteDeck(item.id)}>
+                    <Image
+                        source={require('../../assets/trash.png')}
+                    />
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
