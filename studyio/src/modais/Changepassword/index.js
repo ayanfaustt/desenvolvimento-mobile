@@ -9,9 +9,21 @@ import { UpdateUser } from '../../hooks/useUser';
 export function ChangepassModal ({ handleClose }) {
 
     const navigation = useNavigation();
+    const { userId, token, ip } = useUser();
     const [new_password, setNewPassword] = useState('')
     const [confirm_Password, setConfirmPassword] = useState('');
-    const { userId, token, ip } = useUser();
+    const [showPassword1, setShowPassword1] = useState(false); // State to control password visibility for input 1
+    const [showPassword2, setShowPassword2] = useState(false); // State to control password visibility for input 2
+
+    // Function to toggle password visibility for input 1
+    const togglePasswordVisibility1 = () => {
+        setShowPassword1(!showPassword1);
+    };
+
+    // Function to toggle password visibility for input 2
+    const togglePasswordVisibility2 = () => {
+        setShowPassword2(!showPassword2);
+    };
 
     async function handleUpdatePassword() {
         const data = {
@@ -59,31 +71,46 @@ export function ChangepassModal ({ handleClose }) {
 
                 <View style={styles.container}>
 
-                    <Text style={styles.title2}>Confirm Password</Text>
-                    <TextInput style={styles.text_input2} 
-                    secureTextEntry={true}
-                    value={new_password}
-                    onChangeText={setNewPassword}
-                    ></TextInput>
-                    
-                    <TouchableOpacity 
-                        style={styles.button_save} 
-                        onPress={ handleUpdatePassword }>
-                        <Text style={globalStyles.textButton}>Change</Text>
-                    </TouchableOpacity>
-
-                    <Text style={styles.title1}>New Password</Text>
+                <Text style={styles.title1}>New Password</Text>
                     <TextInput style={styles.text_input1} 
-                    secureTextEntry={true}
+                    hitSlop={{top: 15, bottom: 15, left: 15, right: -20}}
+                    secureTextEntry={!showPassword1}
                     value={confirm_Password}
                     onChangeText={setConfirmPassword}
                     ></TextInput>
+
+                    <Text style={styles.title2}>Confirm Password</Text>
+                    <TextInput style={styles.text_input2}
+                    hitSlop={{top: 15, bottom: 15, left: 15, right: -20}} 
+                    secureTextEntry={!showPassword2} // Toggle secureTextEntry based on state
+                    value={new_password}
+                    onChangeText={setNewPassword}
+                    ></TextInput>
+
+                    <TouchableOpacity
+                        style = {styles.eye_icon}
+                        hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+                        onPress={togglePasswordVisibility1}  // Toggle password visibility on icon press
+                        ><Image
+                            style={{}}
+                            source={require('../../assets/eye.png')}/>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity
+                        style = {styles.eye_icon2}
+                        onPress={togglePasswordVisibility2}
+                        hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}  // Toggle password visibility on icon press
+                        ><Image
+                            style={{}}
+                            source={require('../../assets/eye.png')}/>
+                    </TouchableOpacity>
                     
                     <TouchableOpacity 
                         style={styles.button_save} 
                         onPress={ handleUpdatePassword }>
                         <Text style={globalStyles.textButton}>Change</Text>
                     </TouchableOpacity>
+                    
                 </View>
             </SafeAreaView>
     )
@@ -169,4 +196,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#DAE9F1'
     },
+    eye_icon: {
+        position: 'absolute',
+        left: 180,
+        top: 55
+    },
+    eye_icon2: {
+        left: 180,
+        position: 'absolute',
+        bottom: 105
+    }
 })
