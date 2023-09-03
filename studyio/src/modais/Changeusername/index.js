@@ -8,35 +8,37 @@ import { UpdateUser } from '../../hooks/useUser';
 
 export function ChangeusernameModal ({ handleClose}) {
     const navigation = useNavigation();
-    const [new_username, setUsername] = useState('');
-    const { username } = useUser();
-    const { userId, ip } = useUser();
+    const [username, setUsername] = useState('');
+    const { userId, ip, token } = useUser();
 
     async function handleUpdateUsername() {
         const data = {
-            new_username: new_username
+            username: username
         };
-        if (username === new_username) {
-            console.error('Same username!');
+        if (!username) {
+            console.error('Username cannot be null!');
         } else {
-            try {
-                await UpdateUser(userId, data, ip).then(() => {
-                    Toast.show({
-                        type: 'success',
-                        text1: 'User updated successfully!',
-                    });
-                    setTimeout(() => {
-                        navigation.navigate('Account');
-                    }, 1500);
-                }).catch(() => {
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Username already exist!',
-                    });
-                })
-            } catch (error) {
-                console.error('Error occurred while updating username:', error);
-            };
+                try {
+                        console.log(ip);
+                        await UpdateUser(userId, data, ip, token).then(() => {
+                            Toast.show({
+                                type: 'success',
+                                text1: `User updated successfully to ${username}! `,
+                                text2: "You'll be redirect to the login page in a few seconds!"
+                            });
+                            handleClose();
+                            setTimeout(() => {
+                                navigation.navigate('SingIn');
+                            }, 4500);
+                        }).catch((error) => {
+                            Toast.show({
+                                type: 'error',
+                                text1: 'Username already in use!',
+                            });
+                        })
+                } catch (error) {
+                    console.error('Error occurred while updating username:', error);
+                };
         };
     };
 
@@ -58,13 +60,12 @@ export function ChangeusernameModal ({ handleClose}) {
                     <Text style={styles.title}>New Username</Text>
                     <TextInput 
                     style={styles.text_input}
-                    value={new_username}
+                    value={username}
                     onChangeText={setUsername}
                     ></TextInput>
-                    <TouchableOpacity style={styles.button_save}>
-                        <Text style={globalStyles.textButton}
-                        onPress={() => handleUpdateUsername()}
-                        >Change</Text>
+                    <TouchableOpacity style={styles.button_save} 
+                        onPress={() => handleUpdateUsername()}>
+                        <Text style={globalStyles.textButton}>Change</Text>
                     </TouchableOpacity>
                 </View>
         </SafeAreaView>

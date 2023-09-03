@@ -14,7 +14,12 @@ export const CreateUser = (username, data, ip) => {
 
 // Alteração de nome de usuário
 
-export const UpdateUser = (userId, data, ip) => {
+export const UpdateUser = (userId, data, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
     var url = `${ip}/user/update/${userId}`
-    return axios.put(url, data)
+    return axios.put(url, data, authorization)
 }

@@ -7,6 +7,7 @@
     import { ChangeEmailModal } from '../../modais/Changeemail';
     import { ChangeusernameModal } from '../../modais/Changeusername';
     import { Changeiconmodal } from '../../modais/Changeicon';
+    import Toast from 'react-native-toast-message'
 
     export function Account() {
         const [selectedIcon, setSelectedIcon] = useState(null);
@@ -94,7 +95,7 @@
                         style={{left: 5, height: 15}}/>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={ () => navigation.navigate('Welcome')}
+                <TouchableOpacity onPress={ () => navigation.navigate('SingIn')}
                     style={styles.logoutButton}>
                     <Text style={styles.logoutButtonText}>Logout </Text>
                     <Image
@@ -134,7 +135,7 @@
                             <ChangeEmailModal
                             handleClose={() => setVisibleModal4(false)}/>
                 </Modal>
-
+                <Toast />
             </View>
         )
     }

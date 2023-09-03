@@ -10,13 +10,16 @@ const UserContext = createContext({
   token: null,
   setToken: () => {},
   reqConfig: null,
-  setReqConfig: () => []
+  setReqConfig: () => [],
+  // email: null,
+  // setEmail: () => {},
 });
 
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(null);
+  // const [email, setEmail] = useState(null);
   const [username, setUserName] = useState(null);
   const [reqConfig, setReqConfig] = useState({         
     headers:{
