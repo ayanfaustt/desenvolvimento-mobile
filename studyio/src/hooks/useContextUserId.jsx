@@ -13,13 +13,15 @@ const UserContext = createContext({
   setReqConfig: () => [],
   // email: null,
   // setEmail: () => {},
+  // image: () => {},
+  //setImage: () => {},
 });
-
 
 export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(null);
   // const [email, setEmail] = useState(null);
+  // const [image, setImage] = useState(null);
   const [username, setUserName] = useState(null);
   const [reqConfig, setReqConfig] = useState({         
     headers:{

@@ -9,7 +9,7 @@ import { UpdateUser } from '../../hooks/useUser';
 export function ChangeEmailModal ({ handleClose}) {
     const navigation = useNavigation();
     const [new_email, setEmail] = useState('');
-    const { email } = useUser();
+    // const { email } = useUser();
     const { userId, ip } = useUser();
 
     async function handleUpdateEmail() {
