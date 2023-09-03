@@ -10,7 +10,8 @@ export function ChangepassModal ({ handleClose }) {
 
     const navigation = useNavigation();
     const [new_password, setNewPassword] = useState('')
-    const { ip } = useUser();
+    const [confirm_Password, setConfirmPassword] = useState('');
+    const { userId, token, ip } = useUser();
 
     async function handleUpdatePassword() {
         const data = {
@@ -18,17 +19,21 @@ export function ChangepassModal ({ handleClose }) {
         };
         if (!new_password) {
             console.error('Password cannot be null!');
+        } else if (new_password != confirm_Password) { // Compare passwords
+            console.error('Passwords are not the same');
         } else {
             try {
-                await UpdateUser(new_password, data, ip).then(() => {
+                await UpdateUser(userId, data, ip, token).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: 'Password updated successfully!',
+                        text2: 'You will be redirected to the login page in a few seconds!'
                     });
+                    handleClose();
                     setTimeout(() => {
-                        navigation.navigate('Account');
-                    }, 1500);
-                }).catch(() => {
+                        navigation.navigate('SingIn');
+                    }, 4500);
+                }).catch((error) => {
                     Toast.show({
                         type: 'error',
                         text1: 'Failed at updating password!',
@@ -54,11 +59,24 @@ export function ChangepassModal ({ handleClose }) {
 
                 <View style={styles.container}>
 
-                    <Text style={styles.title2}>New Password</Text>
+                    <Text style={styles.title2}>Confirm Password</Text>
                     <TextInput style={styles.text_input2} 
                     secureTextEntry={true}
                     value={new_password}
                     onChangeText={setNewPassword}
+                    ></TextInput>
+                    
+                    <TouchableOpacity 
+                        style={styles.button_save} 
+                        onPress={ handleUpdatePassword }>
+                        <Text style={globalStyles.textButton}>Change</Text>
+                    </TouchableOpacity>
+
+                    <Text style={styles.title1}>New Password</Text>
+                    <TextInput style={styles.text_input1} 
+                    secureTextEntry={true}
+                    value={confirm_Password}
+                    onChangeText={setConfirmPassword}
                     ></TextInput>
                     
                     <TouchableOpacity 
@@ -82,7 +100,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 'auto',
         alignSelf: 'center',
-        bottom: 35
+        bottom: 20
     },
     container:{
         width: 233,
@@ -107,13 +125,35 @@ const styles = StyleSheet.create({
         top: 385,
         flexDirection: 'row',
     },
+    title1: {
+        fontSize: 18,
+        position: 'absolute',
+        color: '#DAE9F1',
+        alignItems: 'center',
+        alignSelf: 'center',
+        top: 15
+    },
+    text_input1: {
+        position: 'absolute',
+        borderWidth: 2,
+        borderRadius: 100,
+        borderColor: '#DAE9F1',
+        width: 190,
+        height: 30,
+        alignSelf: 'center',
+        top: 50,
+        alignContent:'center',
+        fontSize: 14,
+        textAlign: 'center',
+        color: '#DAE9F1'
+    },
     title2: {
         fontSize: 18,
         position: 'absolute',
         color: '#DAE9F1',
         alignItems: 'center',
         alignSelf: 'center',
-        top: 40
+        top: 100
     },
     text_input2: {
         position: 'absolute',
@@ -123,7 +163,7 @@ const styles = StyleSheet.create({
         width: 190,
         height: 30,
         alignSelf: 'center',
-        top: 80,
+        top: 130,
         alignContent:'center',
         fontSize: 14,
         textAlign: 'center',

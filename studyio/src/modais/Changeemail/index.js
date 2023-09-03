@@ -14,7 +14,7 @@ export function ChangeEmailModal ({ handleClose}) {
 
     async function handleUpdateEmail() {
         const data = {
-            new_email: new_email
+            email: new_email
         };
         if (!new_email) {
             console.error('E-mail cannot be null!');
@@ -23,11 +23,12 @@ export function ChangeEmailModal ({ handleClose}) {
                 await UpdateUser(userId, data, ip).then(() => {
                     Toast.show({
                         type: 'success',
-                        text1: 'E-mail updated successfully!',
+                        text1: `E-mail updated successfully to ${new_email}!`,
+                        text2: "You'll be redirect to the login page in a few seconds!"
                     });
                     setTimeout(() => {
-                        navigation.navigate('Account');
-                    }, 1500);
+                        navigation.navigate('SingIn');
+                    }, 4500);
                 }).catch(() => {
                     Toast.show({
                         type: 'error',
