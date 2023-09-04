@@ -10,7 +10,7 @@ export function ChangeEmailModal ({ handleClose}) {
     const navigation = useNavigation();
     const [new_email, setEmail] = useState('');
     // const { email } = useUser();
-    const { userId, ip } = useUser();
+    const { userId, ip, token } = useUser();
 
     async function handleUpdateEmail() {
         const data = {
@@ -20,16 +20,13 @@ export function ChangeEmailModal ({ handleClose}) {
             console.error('E-mail cannot be null!');
         } else {
             try {
-                await UpdateUser(userId, data, ip).then(() => {
+                await UpdateUser(userId, data, ip, token).then(() => {
                     Toast.show({
                         type: 'success',
                         text1: `E-mail updated successfully to ${new_email}!`,
-                        text2: "You'll be redirect to the login page in a few seconds!"
                     });
-                    setTimeout(() => {
-                        navigation.navigate('SingIn');
-                    }, 4500);
-                }).catch(() => {
+                handleClose();
+                }).catch((error) => {
                     Toast.show({
                         type: 'error',
                         text1: 'E-mail already exist!',
@@ -62,9 +59,10 @@ export function ChangeEmailModal ({ handleClose}) {
                     value={new_email}
                     onChangeText={setEmail}
                     ></TextInput>
-                    <TouchableOpacity style={styles.button_save}>
+                    <TouchableOpacity 
+                        style={styles.button_save}
+                        onPress={() => handleUpdateEmail()}>
                         <Text style={globalStyles.textButton}
-                        onPress={() => handleUpdateEmail()}
                         >Change</Text>
                     </TouchableOpacity>
                 </View>

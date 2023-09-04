@@ -17,23 +17,29 @@ export function CreateDeck({ handleClose }) {
             deckName: deckName,
             tagId: selectedTag
         };
-        try {
-            await CreateNewDeck(userId, data, ip, token).then(() => {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Deck created successfully!'
-                });
-                handleClose();
-            }).catch(() => {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Deck already exist!',
-                });
-            })
-        } catch(error) {
-            console.error('Error occurred while create deck:', error);
+        if (!deckName) {
+            console.error('Deck must have a name! ');
+        } else if (!selectedTag) {
+            console.error('Deck must have a tag! '); 
+        }    else {
+                try {
+                    await CreateNewDeck(userId, data, ip, token).then(() => {
+                        Toast.show({
+                            type: 'success',
+                            text1: 'Deck created successfully!'
+                        });
+                        handleClose();
+                    }).catch(() => {
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Deck already exist!',
+                        });
+                    })
+                } catch(error) {
+                    console.error('Error occurred while create deck:', error);
+            }
         }
-    }
+    };
 
     async function handleListTag() {
         try {
