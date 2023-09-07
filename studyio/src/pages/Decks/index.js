@@ -4,22 +4,35 @@ import Carousel from 'react-native-snap-carousel';
 import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ListCards } from '../../hooks/useCard';
-import { CreateDeck } from '../../modais/CreateDeck';
+import { CreateCard } from '../../modais/CreateCard';
 import { CreateTag } from '../../modais/CreateTag';
 import { useUser } from '../../hooks/useContextUserId';
+import Toast from 'react-native-toast-message';
 
 export function Decks() {
     const navigation = useNavigation();
     const route = useRoute();
     const item = route.params?.item;
     const [cardList, setCardList] = useState([]);
-    const [visibleModal, setVisibleModal] = useState(false);
-    const [visibleModal2, setVisibleModal2] = useState(false);
+    const [visibleModalCreateCard, setVisibleModalCreateCard] = useState(false);
+    const [visibleModalTag, setVisibleModalTag] = useState(false);
     const { userId, ip, token } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
     };
+
+    const handleCreateCardSuccess = () => {
+        setVisibleModalCreateCard(false);
+        handleListCard();
+        Toast.show({
+            type: 'success',
+            text1: 'Card created successfully!'
+        });
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,30 +48,29 @@ export function Decks() {
                 const data = response.data;
                 setCardList(data);
             }).catch((err) => {
-                console.log('Error fetching data:', err);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error fetching data', err
+                });
             })
 
         } catch (error) {
-            console.error('Error occurred while list decks: ', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Error occurred while list cards', error
+            });
         }
     }
 
-    async function handleOpenCard(item) {
-        navigation.navigate('Cards', {item});
-    }
-
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={globalStyles.cardFlahscard} onPress={() => handleOpenCard(item)}>
+    const CardItem = ({ item, currentIndex, totalItems }) => {
+        return (
+          <View style={globalStyles.cardFlahscard}>
             <View style={globalStyles.cardFlahscardContent}>
                 <Text style={globalStyles.cardFlahscardText}>{item.card_name}</Text>
             </View>
-        </TouchableOpacity>
-    );
-
-    const CardItem = ({ item }) => {
-        return (
-          <View style={styles.cardContainer}>
-            <Text style={styles.cardText}>{item.card_name}</Text>
+            <Text style={styles.cardNumberText}>
+                {currentIndex + 1}/{totalItems}
+            </Text>
           </View>
         );
       };
@@ -70,34 +82,41 @@ export function Decks() {
                 <Text style={globalStyles.tagText}>{item.tag.tag_name}</Text>
                 <Text style={globalStyles.tagLine}></Text>
             </View>
-            {/* <FlatList
-                data={cardList}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-            /> */}
             <Carousel
             data={cardList}
-            renderItem={({ item }) => <CardItem item={item} />}
+            renderItem={({ item, index }) => <CardItem item={item} 
+            currentIndex={index} 
+            totalItems={cardList.length}/>}
             sliderWidth={300}
-            itemWidth={200}
+            itemWidth={280}
+            onSnapToItem={(index) => setCurrentIndex(index)}
             />
             <Modal
-                visible={visibleModal2}
+                visible={visibleModalCreateCard}
                 transparent={true}
-                onRequestClose={() => setVisibleModal2(false)}
+                onRequestClose={() => setVisibleModalCreateCard(false)}
+                data={userId}>
+                <CreateCard
+                    handleClose={handleCreateCardSuccess}
+                    selectedItem={selectedItem} />
+            </Modal>
+            <Modal
+                visible={visibleModalTag}
+                transparent={true}
+                onRequestClose={() => setVisibleModalTag(false)}
                 data={userId}>
                 <CreateTag
-                    handleClose={() => setVisibleModal2(false)} />
+                    handleClose={() => setVisibleModalTag(false)} />
             </Modal>
             {isMenuOpen && (
-                <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModal(true)}>
+                <TouchableOpacity style={globalStyles.subButton1} onPress={() => { setVisibleModalCreateCard(true); setSelectedItem(item);} }>
                     <Image
                         source={require('../../assets/file.png')}
                     />
                 </TouchableOpacity>
             )}
             {isMenuOpen && (
-                <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModal2(true)}>
+                <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModalTag(true)}>
                     <Image
                         source={require('../../assets/tag.png')}
                     />
@@ -111,6 +130,7 @@ export function Decks() {
                 onPress={() => handleLogin()}>
                 <Text style={styles.textButton}>Show Answer</Text>
             </TouchableOpacity>
+            <Toast />
         </View>
     )
 }
@@ -149,5 +169,11 @@ const styles = StyleSheet.create({
     },
       cardText: {
         fontSize: 18,
+    },
+    cardNumberText: {
+        fontSize: 16,
+        color: '#004257',
+        alignSelf: 'center',
+        marginTop: 8,
     },
 })
