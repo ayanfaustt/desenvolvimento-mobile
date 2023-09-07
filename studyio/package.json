@@ -27,6 +27,7 @@
     "react-native-auto-size-text": "^1.1.1",
     "react-native-chart-kit": "^6.12.0",
     "react-native-dropdown-select-list": "^2.0.4",
+    "react-native-modal-selector": "^2.1.2",
     "react-native-picker-select": "^8.1.0",
     "react-native-pie-chart": "^3.0.1",
     "react-native-reanimated": "~3.3.0",

@@ -1,10 +1,10 @@
-import { React, useState, useEffect } from "react";
-import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, Picker } from "react-native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image } from "react-native";
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
 import { CreateNewDeck } from "../../hooks/useDeck";
 import { ListTags } from "../../hooks/useTag";
-import RNPickerSelect from 'react-native-picker-select';
+import ModalSelector from 'react-native-modal-selector'; // Importar o ModalSelector
 
 export function CreateDeck({ handleClose }) {
     const [deckName, setDeckName] = useState('');
@@ -32,11 +32,11 @@ export function CreateDeck({ handleClose }) {
                     }).catch(() => {
                         Toast.show({
                             type: 'error',
-                            text1: 'Deck already exist!',
+                            text1: 'Deck already exists!',
                         });
                     })
                 } catch(error) {
-                    console.error('Error occurred while create deck:', error);
+                    console.error('Error occurred while creating deck:', error);
             }
         }
     };
@@ -45,15 +45,11 @@ export function CreateDeck({ handleClose }) {
         try {
             const response = await ListTags(userId, ip, token);
             const data = response.data;
-            const tagOptions = data.map(tag => ({ label: tag.tag_name, value: tag.id }));
+            const tagOptions = data.map(tag => ({ label: tag.tag_name, key: tag.id })); // Alteração na estrutura do objeto
             setTagOptions(tagOptions);
         } catch (error) {
-            console.error('Error occurred while list tags: ', error);
+            console.error('Error occurred while listing tags: ', error);
         }
-    }
-
-    function handleInputChange(name, value) {
-        setSelectedTag(value);
     }
 
     useEffect(() => {
@@ -77,24 +73,19 @@ export function CreateDeck({ handleClose }) {
                 value={deckName}
                 onChangeText={setDeckName}/>
             <Text style={styles.title}>Tag:</Text>
-                <View style={styles.tagInput}>
-                    <RNPickerSelect
-                        onValueChange={(value) => handleInputChange('tagId', value)}
-                        items={tagOptions}
-                        onOpen={() => setSelectedTag(null)}
-                        placeholder={{ label: 'Selecione uma tag', value: null }}
-                        style={{
-                            placeholder: {
-                                color: '#004257'
-                            },
-                        }}
-                        hideDoneBar
-                    />
-                </View>
+            <View style={styles.tagInput}>
+                <ModalSelector
+                    data={tagOptions}
+                    initValue="Select a tag"
+                    onChange={(option) => setSelectedTag(option.key)}
+                    optionTextStyle = {{ color: '#004257' }}
+                    cancelText="Cancel"
+                />
+            </View>
             <View>
                 <TouchableOpacity 
                     style={styles.addButton}
-                    onPress={ () => handleCreateDeck()}>
+                    onPress={() => handleCreateDeck()}>
                     <Text style={styles.textButton}>Add</Text>
                 </TouchableOpacity>
             </View>
@@ -156,11 +147,9 @@ const styles = StyleSheet.create({
         padding: 2
     },
     tagInput: {
-        backgroundColor: '#A4C3DA',
-        // height: 30,
+        backgroundColor: '#006699',
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 10,
-        
     },
 })
