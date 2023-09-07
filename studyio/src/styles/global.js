@@ -142,5 +142,26 @@ export const globalStyles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         marginTop: 20
-    }
+    },
+    cardFlahscard:{
+        backgroundColor: '#A4C3DA',
+        height: 200,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 10,
+        marginTop: 15,
+    },
+    cardFlahscardContent:{
+        borderColor: '#004257',
+        borderWidth: 0.5,
+        borderRadius: 10,
+        height: 190,
+        margin: 5,
+        justifyContent: 'center'
+    },
+    cardFlahscardText:{
+        fontSize: 18,
+        fontWeight: 'bold',
+        alignSelf: 'center'
+    },
 });

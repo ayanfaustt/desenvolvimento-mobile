@@ -1,8 +1,13 @@
 import axios from 'axios'
 
-export const ListCards = (deckId, ip) => {
+export const ListCards = (deckId, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
     var url = `${ip}/cards/list/${deckId}`
-    return axios.get(url)
+    return axios.get(url, authorization);
     
 }
 

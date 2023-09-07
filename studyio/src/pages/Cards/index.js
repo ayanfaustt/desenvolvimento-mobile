@@ -44,16 +44,9 @@ export function Cards() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={globalStyles.tittlePage}>BNANANANAN</Text>
-            <View style={globalStyles.tag}>
-                <Text style={globalStyles.tagText}>Tag Name</Text>
-                <Text style={globalStyles.tagLine}></Text>
-            </View>
-            <FlatList
-                data={openCard}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-            />
+            <Text style={globalStyles.tittlePage}>Teste</Text>
+            <View>
+			</View>
         </View>
         
     )
