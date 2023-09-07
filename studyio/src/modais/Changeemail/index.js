@@ -30,6 +30,7 @@ export function ChangeEmailModal ({ handleClose}) {
                     });
                 handleClose();
                 }).catch((error) => {
+                    handleClose();
                     Toast.show({
                         type: 'error',
                         text1: 'E-mail already exist!',

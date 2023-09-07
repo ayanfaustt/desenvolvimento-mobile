@@ -31,14 +31,18 @@ export function ChangePasswordModal ({ visible, closeModal}) {
           password: new_password
       };
       if (!new_password) {
+        closeModal();
         Toast.show({
           type: 'error',
-          text1: `Password field is empty`,
-      });
-      } else if (new_password != confirm_Password) { // Compare passwords
+          text1: `Password field is empty`
+        })
+      }else if (new_password != confirm_Password) { // Compare passwords
           Toast.show({
             type: 'error',
             text1: `Passwords do not match`,
+            style:{
+              zIndex:9999
+            }
         });
       } else {
           try {
@@ -46,22 +50,31 @@ export function ChangePasswordModal ({ visible, closeModal}) {
                   Toast.show({
                       type: 'success',
                       text1: 'Password updated successfully!',
-                      text2: 'You will be redirected to the login page in a few seconds!'
+                      text2: 'You will be redirected to the login page in a few seconds!',
+                      style:{
+                        zIndex:9999
+                      }
+                      
                   });
                   closeModal();
                   setTimeout(() => {
                       navigation.navigate('SingIn');
                   }, 4500);
               }).catch((error) => {
-                  Toast.show({
-                      type: 'error',
-                      text1: `Failed at updating password : ${error}`,
-                  });
+                closeModal();
+                Toast.show({
+                    type: 'error',
+                    text1: `Failed at updating password : ${error}`,
+                });
               })
           } catch (error) {
             Toast.show({
                 type: 'error',
                 text1: `Error occurred while updating password: ${error}`,
+                style:{
+                  zIndex:9999
+                }
+                
             });
           };
       };

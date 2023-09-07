@@ -22,7 +22,6 @@ export function ChangeusernameModal ({ handleClose}) {
             });
         } else {
                 try {
-                        console.log(ip);
                         await UpdateUser(userId, data, ip, token).then(() => {
                             Toast.show({
                                 type: 'success',
@@ -34,6 +33,8 @@ export function ChangeusernameModal ({ handleClose}) {
                                 navigation.navigate('SingIn');
                             }, 4500);
                         }).catch((error) => {
+                            handleClose();
+                            console.log('executei');
                             Toast.show({
                                 type: 'error',
                                 text1: 'Username already in use!',
