@@ -16,3 +16,14 @@ export const OpenCard = (cardId, ip) => {
     return axios.get(url)
     
 }
+
+export const CreateNewCard = (deckId, data, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/cards/create/${deckId}`
+    return axios.post(url, data, authorization);
+    
+}

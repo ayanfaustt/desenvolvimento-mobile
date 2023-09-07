@@ -22,6 +22,17 @@ export const CreateNewDeck = (userId, data, ip, token) => {
     
 }
 
+export const EditDeck = (deckId, data, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/decks/update/${deckId}`
+    return axios.put(url, data, authorization);
+    
+}
+
 export const DeleteDeck = (deckId, ip, token) => {
     const authorization = {
 		headers: {
