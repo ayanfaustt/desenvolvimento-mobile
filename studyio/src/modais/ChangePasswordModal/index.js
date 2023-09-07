@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, SafeAreaView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, SafeAreaView, TextInput} from 'react-native';
 import {AutoSizeText} from 'react-native-auto-size-text';
+import { globalStyles } from '../../styles/global';
+import { UpdateUser } from '../../hooks/useUser';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+import Icon from 'react-native-vector-icons/Ionicons'
+import { useUser } from '../../hooks/useContextUserId';
 
 export function ChangePasswordModal ({ visible, closeModal}) {
   const navigation = useNavigation();
@@ -25,9 +31,15 @@ export function ChangePasswordModal ({ visible, closeModal}) {
           password: new_password
       };
       if (!new_password) {
-          console.error('Password cannot be null!');
+        Toast.show({
+          type: 'error',
+          text1: `Password field is empty`,
+      });
       } else if (new_password != confirm_Password) { // Compare passwords
-          console.error('Passwords are not the same');
+          Toast.show({
+            type: 'error',
+            text1: `Passwords do not match`,
+        });
       } else {
           try {
               await UpdateUser(userId, data, ip, token).then(() => {
@@ -36,18 +48,21 @@ export function ChangePasswordModal ({ visible, closeModal}) {
                       text1: 'Password updated successfully!',
                       text2: 'You will be redirected to the login page in a few seconds!'
                   });
-                  handleClose();
+                  closeModal();
                   setTimeout(() => {
                       navigation.navigate('SingIn');
                   }, 4500);
               }).catch((error) => {
                   Toast.show({
                       type: 'error',
-                      text1: 'Failed at updating password!',
+                      text1: `Failed at updating password : ${error}`,
                   });
               })
           } catch (error) {
-              console.error('Error occurred while updating password:', error);
+            Toast.show({
+                type: 'error',
+                text1: `Error occurred while updating password: ${error}`,
+            });
           };
       };
   };
@@ -70,52 +85,59 @@ export function ChangePasswordModal ({ visible, closeModal}) {
             style={{position: 'relative', left: '90%', bottom:'100%'}}
             resizeMode='contain'/>
         </TouchableOpacity>
-        <SafeAreaView style={{display: 'flex', flexDirection: 'column', gap: 20}}>
+        <SafeAreaView style={{display: 'flex', flexDirection: 'column', gap: 10}}>
 
-          <Text>
+          <Text
+            style={styles.inputText}
+          >
             New Password
           </Text>
+          <View style={styles.inputContainer}>
+            <TextInput 
+              style={styles.input}
+              hitSlop={{top: 15, bottom: 15, left: 15, right: -20}}
+              secureTextEntry={!showPassword1}
+              value={confirm_Password}
+              onChangeText={setConfirmPassword}
+            />
 
-          <TextInput 
-            hitSlop={{top: 15, bottom: 15, left: 15, right: -20}}
-            secureTextEntry={!showPassword1}
-            value={confirm_Password}
-            onChangeText={setConfirmPassword}
-          />
+            <TouchableOpacity
+              style = {styles.eye_icon}
+              hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+              onPress={togglePasswordVisibility1}  // Toggle password visibility on icon press
+            > 
+              <Icon name='eye-outline' size={30} color='#024959'/>
+            </TouchableOpacity>
+          </View>
 
-          <Text>
+          <Text
+            style={styles.inputText}
+          >
             Confirm Password
           </Text>
 
-          <TextInput
-            hitSlop={{top: 15, bottom: 15, left: 15, right: -20}} 
-            secureTextEntry={!showPassword2} // Toggle secureTextEntry based on state
-            value={new_password}
-            onChangeText={setNewPassword}
-          />
-
-          <TouchableOpacity
-            style = {styles.eye_icon}
-            hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
-            onPress={togglePasswordVisibility1}  // Toggle password visibility on icon press
-          > 
-            <Image
-              style={{}}
-              source={require('../../assets/eye.png')}
+          <View style={styles.inputContainer}>
+            <TextInput
+            style={styles.input}
+              hitSlop={{top: 15, bottom: 15, left: 15, right: -20}} 
+              secureTextEntry={!showPassword2} // Toggle secureTextEntry based on state
+              value={new_password}
+              onChangeText={setNewPassword}
             />
-          </TouchableOpacity>
 
+            <TouchableOpacity
+              style = {styles.eye_icon2}
+              onPress={togglePasswordVisibility2}
+              hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}  // Toggle password visibility on icon press
+            >
+              {togglePasswordVisibility2 ? (
+                <Icon name='eye-outline' size={30} color='#024959'/>
 
-          <TouchableOpacity
-            style = {styles.eye_icon2}
-            onPress={togglePasswordVisibility2}
-            hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}  // Toggle password visibility on icon press
-          >
-            <Image
-              style={{}}
-              source={require('../../assets/eye.png')}
-            />
-          </TouchableOpacity>
+              ) : (
+                <Icon name='eye-off-outline' size={30} color='#024959'/>
+              )}
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity 
             style={styles.button_save} 
@@ -159,6 +181,11 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 14
   },
+  inputContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   addButton:{
       backgroundColor: '#004257',
       borderRadius: 10,
@@ -178,13 +205,28 @@ const styles = StyleSheet.create({
       marginLeft:5,
       color: 'white',
   },
+  inputText:{
+    marginLeft:5,
+  },
   input:{
       backgroundColor: '#A4C3DA',
-      marginLeft: 30,
-      marginRight: 30,
+      marginLeft: 10,
+      marginRight: 10,
       borderRadius: 10,
+      width:250,
       padding: 2
-  }
-})
+  },
+  eye_icon: {
 
-export default MaterialModal;
+  },
+  button_save: {
+    backgroundColor: '#004257',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    top: 10,
+    width: 90,
+    height: 30
+  }
+});

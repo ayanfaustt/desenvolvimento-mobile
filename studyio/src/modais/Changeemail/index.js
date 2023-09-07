@@ -17,7 +17,10 @@ export function ChangeEmailModal ({ handleClose}) {
             email: new_email
         };
         if (!new_email) {
-            console.error('E-mail cannot be null!');
+            Toast.show({
+                type: 'error',
+                text1: `Email field is empty`,
+            });
         } else {
             try {
                 await UpdateUser(userId, data, ip, token).then(() => {

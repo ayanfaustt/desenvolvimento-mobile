@@ -16,7 +16,10 @@ export function ChangeusernameModal ({ handleClose}) {
             username: username
         };
         if (!username) {
-            console.error('Username cannot be null!');
+            Toast.show({
+                type: 'error',
+                text1: `Username field is empty`,
+            });
         } else {
                 try {
                         console.log(ip);
