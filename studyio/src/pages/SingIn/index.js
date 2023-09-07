@@ -46,7 +46,6 @@ export function SingIn() {
 
     return (
         <View style={styles.container}>
-            <Toast />
             <Image
                 source={require('../../assets/Logo2.png')}
                 style={{ width: '100%', marginTop: '15%', marginBottom: '15%' }}
@@ -88,6 +87,7 @@ export function SingIn() {
                 <Text style={styles.textRegister}
                     onPress={() => navigation.navigate('SingUp')}>New? Register</Text>
             </TouchableOpacity>
+            <Toast />
         </View>
     )
 }

@@ -18,6 +18,14 @@ export function Flashcards() {
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
     };
+    const handleCreateDeckSuccess = () => {
+        setVisibleModal(false);
+        handleListDeck();
+        Toast.show({
+            type: 'success',
+            text1: 'Deck created successfully!'
+        });
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -92,9 +100,7 @@ export function Flashcards() {
                     handleListDeck();
                     }}>
                 <CreateDeck
-                    handleClose={() => {
-                    setVisibleModal(false);
-                    handleListDeck();}} />
+                    handleClose={handleCreateDeckSuccess} />
             </Modal>
             <Modal
                 visible={visibleModal2}
