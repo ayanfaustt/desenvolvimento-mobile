@@ -3,14 +3,22 @@ import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Imag
 import { useUser } from '../../hooks/useContextUserId';
 import { CreateNewSummarie } from '../../hooks/useSummarie';
 import { ListTags } from '../../hooks/useTag';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
+import ModalSelector from 'react-native-modal-selector';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 export function CreateSummarie({ handleClose }) {
     const { userId, ip, token } = useUser('');
     const [data, setData] = useState({ summarieName: "", tagId: "1", summarieContent: "" });
     const [selectedTag, setSelectedTag] = useState(null);
     const [tagOptions, setTagOptions] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
+    const config = {
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
 
     async function handleCreateSummarie() {
 
@@ -36,6 +44,34 @@ export function CreateSummarie({ handleClose }) {
         }));
 
     }
+    const handleGptGenerate = async (summarieName) => {
+        console.log("clickei aq");
+        console.log(summarieName);
+        try {
+            // setIsLoading(true);
+            const response = await axios.post(
+                `${ip}/openai/create/summarie`,
+                {
+                    summarieTitle: summarieName,
+                },
+                config
+            );
+
+            if(!response)
+                throw new Error("Request faild");
+            
+            console.log(response.data);
+            handleInputChange("summarieContent", response.data.content);
+
+            // setIsLoading(false);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: error
+            });
+            // setIsLoading(false);
+        }
+    };
 
     useEffect(() => console.log(data), [data])
 
@@ -78,7 +114,7 @@ export function CreateSummarie({ handleClose }) {
                     onChangeText={(value) => handleInputChange('summarieName', value)} />
             </View>
 
-            <View>
+            {/* <View>
             <Text style={styles.title}>Tag:</Text>
                 <View style={styles.tagInput}>
                     <RNPickerSelect
@@ -90,15 +126,39 @@ export function CreateSummarie({ handleClose }) {
                     />
                     {selectedTag && <Text>Selected Tag: {selectedTag.label}</Text>}
                 </View>
+            </View> */}
+            <View>
+                <Text style={styles.title}>Tag:</Text>
+                <View style={styles.tagInput}>
+                    <ModalSelector // Substitua o RNPickerSelect pelo react-native-modal-selector
+                        data={tagOptions.map((option, index) => ({ key: index, ...option }))}
+                        initValue={selectedTag || "Selecione uma tag"} // Use selectedTag ou "Selecione uma tag" como texto inicial
+                        onChange={(option) => {
+                            handleInputChange('tagId', option.value);
+                            setSelectedTag(option.label);
+                        }}
+                        // Adicione o código abaixo para fechar o modal quando uma tag for selecionada
+                        onModalOpen={() => setSelectedTag(null)}
+                    />
+                </View>
             </View>
-
+            <View>
+                <TouchableOpacity
+                    style={styles.gptButton}
+                    onPress={() => handleGptGenerate(data.summarieName)}
+                    // onPress={() => console.log(data.summarieName)}
+                >
+                    <Text style={styles.textButton}>Generate with ChatGpt</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.inputContainer}>
                 <Text style={styles.title}>Summarie Content:</Text>
                 <TextInput
                     name="summarieContent"
                     style={styles.inputGrande}
                     value={data.summarieContent}
-                    onChangeText={(value) => handleInputChange('summarieContent', value)} />
+                    onChangeText={(value) => handleInputChange('summarieContent', value)}
+                    multiline={true} />
             </View>
 
 
@@ -130,6 +190,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         paddingTop: 20,
         paddingBottom: 60,
+        
 
     },
     cardHeader: {
@@ -154,6 +215,19 @@ const styles = StyleSheet.create({
         bottom: 20,
         justifyContent: 'center'
     },
+    gptButton: {
+        backgroundColor: '#004257',
+        borderRadius: 10,
+        height: 32,
+        width: 160,
+        alignSelf: 'start',
+        position: 'relative',
+        top: 20,
+        bottom: 30,
+        justifyContent: 'center',
+        marginBottom: 24,
+        marginLeft: 33,
+    },
     textButton: {
         color: '#DAE9F1',
         alignSelf: 'center'
@@ -173,10 +247,12 @@ const styles = StyleSheet.create({
     },
     inputGrande: {
         backgroundColor: '#A4C3DA',
+        minHeight: 100,
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 10,
         padding: 2,
+        textAlignVertical: 'top',
     },
     tagInput: {
         backgroundColor: '#A4C3DA',
@@ -184,6 +260,6 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 10,
-        
+
     },
 })
