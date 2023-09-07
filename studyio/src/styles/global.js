@@ -146,10 +146,9 @@ export const globalStyles = StyleSheet.create({
     cardFlahscard:{
         backgroundColor: '#A4C3DA',
         height: 200,
-        marginLeft: 10,
-        marginRight: 10,
         borderRadius: 10,
-        marginTop: 15,
+        marginTop: 25,
+        marginLeft: 20
     },
     cardFlahscardContent:{
         borderColor: '#004257',

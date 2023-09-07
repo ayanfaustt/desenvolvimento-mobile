@@ -3,6 +3,7 @@ import { SafeAreaView, Text, Image, StyleSheet, TouchableOpacity, FlatList, View
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateDeck } from '../../modais/CreateDeck';
+import { UpdateDeck } from '../../modais/UpdateDeck';
 import { CreateTag } from '../../modais/CreateTag';
 import { ListDecks, DeleteDeck } from '../../hooks/useDeck';
 import { useUser } from '../../hooks/useContextUserId';
@@ -11,19 +12,31 @@ import Toast from 'react-native-toast-message';
 export function Flashcards() {
     const navigation = useNavigation();
     const [deckList, setDeckList] = useState([]);
-    const [visibleModal, setVisibleModal] = useState(false);
-    const [visibleModal2, setVisibleModal2] = useState(false);
+    const [visibleModalCreateDeck, setVisibleModalCreateDeck] = useState(false);
+    const [visibleModalEditDeck, setVisibleModalEditDeck] = useState(false);
+    const [visibleModalCreateTag, setVisibleModalCreateTag] = useState(false);
     const { userId, ip, token } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
     };
     const handleCreateDeckSuccess = () => {
-        setVisibleModal(false);
+        setVisibleModalCreateDeck(false);
         handleListDeck();
         Toast.show({
             type: 'success',
             text1: 'Deck created successfully!'
+        });
+    }
+
+    const handleEditDeckSuccess = () => {
+        setVisibleModalEditDeck(false);
+        handleListDeck();
+        Toast.show({
+            type: 'success',
+            text1: 'Deck updated successfully!'
         });
     }
 
@@ -41,11 +54,17 @@ export function Flashcards() {
                 const data = response.data;
                 setDeckList(data);
             }).catch((err) => {
-                console.log('Error fetching data:', err);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error fetching data', err
+                });
             })
 
         } catch (error) {
-            console.error('Error occurred while list decks: ', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Error occurred while list decks', error
+            });
         }
     }
 
@@ -62,11 +81,16 @@ export function Flashcards() {
                 });
                 handleListDeck();
             }).catch((err) => {
-                console.log('deu errado')
-                console.log('Error fetching data:', err);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error fetching data', err
+                });
             })
         } catch (error) {
-            console.error('Error occurred while delete deck: ', error);
+            Toast.show({
+                type: 'error',
+                text1: 'Error occurred while delete deck', error
+            });
         }
     }
 
@@ -75,11 +99,18 @@ export function Flashcards() {
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.deck_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
-                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'flex-end'}} onPress={() => handleDeleteDeck(item.id)}>
-                    <Image
-                        source={require('../../assets/trash.png')}
-                    />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'column', alignItems: 'flex-end', bottom: 45 }}>
+                    <TouchableOpacity style={{marginBottom: 12}} onPress={() => { setVisibleModalEditDeck(true); setSelectedItem(item); }}>
+                        <Image
+                            source={require('../../assets/edit-2.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{marginTop: 12}} onPress={() => handleDeleteDeck(item.id)}>
+                        <Image
+                            source={require('../../assets/trash.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         </TouchableOpacity>
     );
@@ -93,32 +124,43 @@ export function Flashcards() {
                 keyExtractor={(item) => item.id.toString()}
             />
             <Modal
-                visible={visibleModal}
+                visible={visibleModalCreateDeck}
                 transparent={true}
                 onRequestClose={() => {
-                    setVisibleModal(false);
+                    setVisibleModalCreateDeck(false);
                     handleListDeck();
                     }}>
                 <CreateDeck
                     handleClose={handleCreateDeckSuccess} />
             </Modal>
             <Modal
-                visible={visibleModal2}
+                visible={visibleModalEditDeck}
                 transparent={true}
-                onRequestClose={() => setVisibleModal2(false)}
+                onRequestClose={() => {
+                    setVisibleModalEditDeck(false);
+                    handleListDeck();
+                    }}>
+                <UpdateDeck
+                    handleClose={handleEditDeckSuccess}
+                    selectedItem={selectedItem} />
+            </Modal>
+            <Modal
+                visible={visibleModalCreateTag}
+                transparent={true}
+                onRequestClose={() => setVisibleModalCreateTag(false)}
                 data={userId}>
                 <CreateTag
-                    handleClose={() => setVisibleModal2(false)} />
+                    handleClose={() => setVisibleModalCreateTag(false)} />
             </Modal>
             {isMenuOpen && (
-                <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModal(true)}>
+                <TouchableOpacity style={globalStyles.subButton1} onPress={() => setVisibleModalCreateDeck(true)}>
                     <Image
                         source={require('../../assets/layers.png')}
                     />
                 </TouchableOpacity>
             )}
             {isMenuOpen && (
-                <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModal2(true)}>
+                <TouchableOpacity style={globalStyles.subButton2} onPress={() => setVisibleModalCreateTag(true)}>
                     <Image
                         source={require('../../assets/tag.png')}
                     />
