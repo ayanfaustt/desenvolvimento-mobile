@@ -20,6 +20,11 @@ export function Decks() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [showAnswer, setShowAnswer] = useState(false);
+
+    const toggleShowAnswer = () => {
+        setShowAnswer(!showAnswer);
+    };
 
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -64,16 +69,18 @@ export function Decks() {
 
     const CardItem = ({ item, currentIndex, totalItems }) => {
         return (
-          <View style={globalStyles.cardFlahscard}>
-            <View style={globalStyles.cardFlahscardContent}>
-                <Text style={globalStyles.cardFlahscardText}>{item.card_name}</Text>
-            </View>
-            <Text style={styles.cardNumberText}>
-                {currentIndex + 1}/{totalItems}
-            </Text>
-          </View>
+            <TouchableOpacity>
+                <View style={globalStyles.cardFlahscard}>
+                    <View style={globalStyles.cardFlahscardContent}>
+                        <Text style={globalStyles.cardFlahscardText}>{showAnswer ? item.card_content : item.card_name}</Text>
+                    </View>
+                    <Text style={styles.cardNumberText}>
+                        {currentIndex + 1}/{totalItems}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         );
-      };
+    };
 
     return (
         <View style={globalStyles.container}>
@@ -127,8 +134,10 @@ export function Decks() {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleLogin()}>
-                <Text style={styles.textButton}>Show Answer</Text>
+                onPress={toggleShowAnswer}>
+                <Text style={styles.textButton}>
+                    {showAnswer ? "Hide Answer" : "Show Answer"}
+                </Text>
             </TouchableOpacity>
             <Toast />
         </View>
