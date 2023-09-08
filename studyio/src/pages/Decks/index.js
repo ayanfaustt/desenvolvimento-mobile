@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Modal } from
 import Carousel from 'react-native-snap-carousel';
 import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { ListCards } from '../../hooks/useCard';
+import { ListCards, DeleteCard } from '../../hooks/useCard';
 import { CreateCard } from '../../modais/CreateCard';
+import { UpdateCard } from '../../modais/UpdateCard';
 import { CreateTag } from '../../modais/CreateTag';
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
@@ -15,6 +16,7 @@ export function Decks() {
     const item = route.params?.item;
     const [cardList, setCardList] = useState([]);
     const [visibleModalCreateCard, setVisibleModalCreateCard] = useState(false);
+    const [visibleModalEditCard, setVisibleModalEditCard] = useState(false);
     const [visibleModalTag, setVisibleModalTag] = useState(false);
     const { userId, ip, token } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
@@ -36,6 +38,15 @@ export function Decks() {
         Toast.show({
             type: 'success',
             text1: 'Card created successfully!'
+        });
+    }
+
+    const handleEditCardSuccess = () => {
+        setVisibleModalEditCard(false);
+        handleListCard();
+        Toast.show({
+            type: 'success',
+            text1: 'Card updated successfully!'
         });
     }
 
@@ -67,18 +78,50 @@ export function Decks() {
         }
     }
 
+    async function handleDeleteCard(cardId) {
+        try {
+            await DeleteCard(cardId, ip, token).then((response) => {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Card deleted successfully!'
+                });
+                handleListCard();
+            }).catch((err) => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error fetching data', err
+                });
+            })
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Error occurred while delete card', error
+            });
+        }
+    }
+
     const CardItem = ({ item, currentIndex, totalItems }) => {
         return (
-            <TouchableOpacity>
-                <View style={globalStyles.cardFlahscard}>
-                    <View style={globalStyles.cardFlahscardContent}>
-                        <Text style={globalStyles.cardFlahscardText}>{showAnswer ? item.card_content : item.card_name}</Text>
-                    </View>
-                    <Text style={styles.cardNumberText}>
-                        {currentIndex + 1}/{totalItems}
-                    </Text>
+            <View style={globalStyles.cardFlahscard}>
+                <View style={globalStyles.cardFlahscardContent}>
+                    <Text style={globalStyles.cardFlahscardText}>{showAnswer ? item.card_content : item.card_name}</Text>
                 </View>
-            </TouchableOpacity>
+                <Text style={styles.cardNumberText}>
+                    {currentIndex + 1}/{totalItems}
+                </Text>
+                <View style={{ flexDirection: 'row', top: 2, justifyContent: 'space-between', marginLeft: 10, marginRight: 10 }}>
+                    <TouchableOpacity onPress={() => { setVisibleModalEditCard(true); setSelectedItem(item); }}>
+                        <Image
+                            source={require('../../assets/edit-2.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDeleteCard(item.id)}>
+                        <Image
+                            source={require('../../assets/trash.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
         );
     };
 
@@ -114,6 +157,17 @@ export function Decks() {
                 data={userId}>
                 <CreateTag
                     handleClose={() => setVisibleModalTag(false)} />
+            </Modal>
+            <Modal
+                visible={visibleModalEditCard}
+                transparent={true}
+                onRequestClose={() => {
+                    setVisibleModalEditCard(false);
+                    handleListDeck();
+                    }}>
+                <UpdateCard
+                    handleClose={handleEditCardSuccess}
+                    selectedItem={selectedItem} />
             </Modal>
             {isMenuOpen && (
                 <TouchableOpacity style={globalStyles.subButton1} onPress={() => { setVisibleModalCreateCard(true); setSelectedItem(item);} }>
