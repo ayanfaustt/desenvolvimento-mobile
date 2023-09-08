@@ -40,7 +40,7 @@ export function Summaries() {
     };
 
     async function handleOpenSummarie(item) {
-        navigation.navigate('SummarieOpen', {item});
+        navigation.navigate('SubPageStack', { screen: 'SummarieOpen', params: { item } });
     };
 
     async function handleDeleteSummarie(summarieId) {
