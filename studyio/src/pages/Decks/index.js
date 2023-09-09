@@ -56,24 +56,6 @@ export function Decks() {
         };
 
         fetchData();
-
-        if(DeviceMotion){
-            console.log('executei');
-            DeviceMotion.addListener(({ acceleration }) => {
-                const { x, y, z } = acceleration;
-        
-    
-                const shakeThreshold = 1.5; 
-    
-                if (Math.abs(x) > shakeThreshold || Math.abs(y) > shakeThreshold || Math.abs(z) > shakeThreshold) {
-                    setShowAnswer(!showAnswer);
-                }
-            });
-        
-            return () => {
-                DeviceMotion.removeAllListeners();
-            };
-        }
        
     }, []);
 
