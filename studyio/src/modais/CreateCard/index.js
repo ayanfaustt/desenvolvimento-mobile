@@ -1,14 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, TouchableOpacity, Text, StyleSheet, TextInput, Image, ScrollView } from "react-native";
+import { 
+    SafeAreaView, 
+    View, 
+    TouchableOpacity, 
+    Text, 
+    StyleSheet, 
+    TextInput, 
+    Image, 
+    ScrollView, 
+    ActivityIndicator
+ } from "react-native";
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
 import { CreateNewCard } from "../../hooks/useCard";
-
+import axios from "axios";
 
 export function CreateCard({ handleClose, selectedItem }) {
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState(null);
-    const { ip, token } = useUser();
+    const { ip, token, reqConfig } = useUser();
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function cardGptHandle(title) {
+        try {
+            setIsLoading(true);
+            const response = await axios.post(
+                `${ip}/openai/create/card`,
+                {
+                    cardTitle: title
+                },
+                reqConfig
+            );
+            
+            setAnswer(response.data.response);
+            setIsLoading(!isLoading);
+        } catch (error) {
+            console.log(error);
+            Toast.show({
+                type: 'error',
+                text1: error.message,
+            });
+        } finally{
+            setIsLoading(false);
+        }
+    }
 
     async function handleCreateCard(){
         const data = {
@@ -42,32 +77,54 @@ export function CreateCard({ handleClose, selectedItem }) {
             <Text style={styles.textButton}>Create a Card</Text>
             </View>
             <TouchableOpacity onPress={handleClose}>
-            <Image
-                source={require("../../assets/x.png")}
-                style={{ position: "relative", marginLeft: 260, bottom: 0 }}
-                resizeMode="contain"
-            />
+                <Image
+                    source={require("../../assets/x.png")}
+                    style={{ position: "relative", marginLeft: 260, bottom: 0 }}
+                    resizeMode="contain"
+                />
             </TouchableOpacity>
             <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.title}>Question:</Text>
-            <TextInput
-                style={styles.input}
-                value={question}
-                onChangeText={setQuestion}
-            />
-            <Text style={styles.title}>Answer:</Text>
-            <TextInput
-                style={styles.input}
-                value={answer}
-                onChangeText={setAnswer}
-            />
+                <Text style={styles.title}>Question:</Text>
+                <TextInput
+                    style={styles.input}
+                    multiline={true}
+                    numberOfLines={undefined}
+                    value={question}
+                    onChangeText={setQuestion}
+                />
             </ScrollView>
-            <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => handleCreateCard()}
-            >
-            <Text style={styles.textButton}>Add</Text>
-            </TouchableOpacity>
+
+            <ScrollView>
+                <Text style={styles.title}>Answer:</Text>
+                <View>
+                    {isLoading && (
+                        <ActivityIndicator size="large" color="#004257"  style={{zIndex: 2 ,position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}/>
+                    )}
+                    <TextInput
+                        style={styles.input}
+                        multiline={true}
+                        numberOfLines={undefined}
+                        value={answer}
+                        onChangeText={setAnswer}
+                    />
+                </View>
+            </ScrollView>
+
+            <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => cardGptHandle(question)}
+                >
+                <Text style={styles.textButton}>Generate with AI</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => handleCreateCard()}
+                >
+                <Text style={styles.textButton}>Add</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
         <Toast />
         </SafeAreaView>
