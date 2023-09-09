@@ -42,6 +42,10 @@ export function Summaries() {
     async function handleOpenSummarie(item) {
         navigation.navigate('SummarieOpen', {item});
     };
+    
+    async function handleEditSummarie(item) {
+        navigation.navigate('SummarieEdit', {item});
+    };
 
     async function handleDeleteSummarie(summarieId) {
         try {
@@ -65,11 +69,20 @@ export function Summaries() {
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
-                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'flex-end'}} onPress={() => handleDeleteSummarie(item.id)}>
-                    <Image
-                        source={require('../../assets/trash.png')}
-                    />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'column', alignItems: 'flex-end', bottom: 45 }}>
+                    <TouchableOpacity style={{marginBottom: 12}} onPress={() => handleEditSummarie(item)}>
+                        <Image
+                            source={require('../../assets/edit-2.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{marginTop: 12}} onPress={() => handleDeleteSummarie(item.id)}>
+                        <Image
+                            source={require('../../assets/trash.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+               
             </View>
         </TouchableOpacity>
     );
