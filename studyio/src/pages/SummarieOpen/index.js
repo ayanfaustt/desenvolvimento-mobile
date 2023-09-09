@@ -2,6 +2,7 @@ import { React, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native';
+import { useUser } from '../../hooks/useContextUserId';
 
 
 export function SummarieOpen() {
@@ -9,15 +10,33 @@ export function SummarieOpen() {
     const route = useRoute();
     const item = route.params?.item;
     const isFocused = useIsFocused();
+    const { userId, ip, token, reqConfig } = useUser();
 
     console.log(item);
 
     const [currentItem, setCurrentItem] = useState(item);
+
+    const updatedMetrics = async () =>{
+        try {
+            await axios.post(
+                `${ip}/metrics/update/summaries/${userId}`,
+                {},
+                reqConfig
+            );
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: `${error}`
+            })
+        }
+    }; 
+
     
     useEffect(() => {
         if (isFocused) {
             setCurrentItem(item);
         }
+        updatedMetrics();
     }, [isFocused, item]);
 
     
