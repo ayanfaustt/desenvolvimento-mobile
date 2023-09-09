@@ -7,6 +7,7 @@ import { UpdateDeck } from '../../modais/UpdateDeck';
 import { CreateTag } from '../../modais/CreateTag';
 import { ListDecks, DeleteDeck } from '../../hooks/useDeck';
 import { useUser } from '../../hooks/useContextUserId';
+import { Decks } from '../Decks';
 import Toast from 'react-native-toast-message';
 
 export function Flashcards() {
@@ -69,8 +70,8 @@ export function Flashcards() {
     }
 
     async function handleOpenDeck(item) {
-        navigation.navigate('Decks', {item});
-    }
+        navigation.navigate('SubPageStack', { screen: 'Decks', params: { item } });
+    }    
 
     async function handleDeleteDeck(deckId) {
         try {

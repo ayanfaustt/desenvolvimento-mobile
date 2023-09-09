@@ -37,6 +37,13 @@ function AuthStack() {
             component={SingUp}
             options={{ headerShown: false }}
             />
+      </Stack.Navigator>
+    );
+}
+
+function SubPageStack() {
+    return(
+        <Stack.Navigator>
             <Stack.Screen
             name="Temporary"
             component={Temporary}
@@ -57,7 +64,7 @@ function AuthStack() {
             component={SummarieEdit}
             options={{ headerShown: false }}
             />
-      </Stack.Navigator>
+        </Stack.Navigator>
     );
 }
   
@@ -150,6 +157,7 @@ export default function Routes() {
     return (
         <Stack.Navigator>
             <Stack.Screen name="AuthStack" component={AuthStack} options={{ tabBarStyle: { display: 'none' }, headerShown: false }} />
+            <Stack.Screen name="SubPageStack" component={SubPageStack} options={{ tabBarStyle: { display: 'none' }, headerShown: false }} />
             <Stack.Screen name="MainStack" component={MainStack} options={{headerShown: false }}/>
         </Stack.Navigator>
     );
