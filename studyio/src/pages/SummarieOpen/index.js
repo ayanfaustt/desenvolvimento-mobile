@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react
 import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../hooks/useContextUserId';
+import { ListOneSummarie } from '../../hooks/useSummarie';
 
 
 export function SummarieOpen() {
@@ -20,7 +21,7 @@ export function SummarieOpen() {
         try {
             const response = await ListOneSummarie(summarieId, ip, token);
             setCurrentItem(response.data);
-            console.log(currentItem);
+            // console.log(currentItem);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
