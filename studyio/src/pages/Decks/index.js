@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Modal, DeviceMotion } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -56,6 +56,25 @@ export function Decks() {
         };
 
         fetchData();
+
+        if(DeviceMotion){
+            console.log('executei');
+            DeviceMotion.addListener(({ acceleration }) => {
+                const { x, y, z } = acceleration;
+        
+    
+                const shakeThreshold = 1.5; 
+    
+                if (Math.abs(x) > shakeThreshold || Math.abs(y) > shakeThreshold || Math.abs(z) > shakeThreshold) {
+                    setShowAnswer(!showAnswer);
+                }
+            });
+        
+            return () => {
+                DeviceMotion.removeAllListeners();
+            };
+        }
+       
     }, []);
 
     async function handleListCard() {
