@@ -11,6 +11,17 @@ export const ListSummaries = (userId, ip, token) => {
     
 }
 
+export const ListOneSummarie = (summarieId, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/summaries/${summarieId}`
+    return axios.get(url, authorization)
+    
+}
+
 export const CreateNewSummarie = (userId, data, ip, token) => {
     const authorization = {
 		headers: {

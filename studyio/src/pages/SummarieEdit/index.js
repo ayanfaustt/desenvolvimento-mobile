@@ -23,7 +23,8 @@ export function SummarieEdit() {
     const handleSaveChanges = async () => {
         try {
             await EditSummarie(item.id, editedSummarie, ip, token);
-            navigation.navigate('SummarieOpen', { item });
+            // navigation.navigate('SummarieOpen', { item });
+            navigation.navigate('Summaries');
         } catch (error) {
             console.error('Error occurred while editing summarie: ', error);
         }

@@ -1,24 +1,35 @@
 import { React, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
-import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useUser } from '../../hooks/useContextUserId';
 
 
 export function SummarieOpen() {
     const navigation = useNavigation();
     const route = useRoute();
+    const summarieId = route.params?.item.id;
     const item = route.params?.item;
-    const isFocused = useIsFocused();
+    const { userId, ip, token } = useUser();
 
-    console.log(item);
+    // console.log(item);
 
     const [currentItem, setCurrentItem] = useState(item);
     
-    useEffect(() => {
-        if (isFocused) {
-            setCurrentItem(item);
+    const handleListOneSummarie = async () => {
+        try {
+            const response = await ListOneSummarie(summarieId, ip, token);
+            setCurrentItem(response.data);
+            console.log(currentItem);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-    }, [isFocused, item]);
+    };
+
+    useFocusEffect(() => {
+        handleListOneSummarie();
+    });
+
 
     
 
