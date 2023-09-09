@@ -54,29 +54,31 @@ export function Dashboard() {
     useEffect(()=>{
         countSummaries();
         countDecks();
+        handleReview();
     },[metrics]);
 
-    const getMetrics = async () => {
-       try {
-         const response = await axios.get(
-             `${ip}/user/metrics/${username}`,
-             reqConfig
-         );
- 
-         setMetrics(response.data.user.metrics);
-         setPercent(response.data.metricsInfo.percent);
-         setIsGrow(response.data.metricsInfo.isGrowth);
-         metrics.sort((a,b) => new Date(a.metrics_date) - new Date(b.metrics_date));
-
-         let reviewsList = [0,0,0,0,0,0,0];
-         metrics.forEach(x => {
+    const handleReview = () =>{
+        let reviewsList = [0,0,0,0,0,0,0];
+        metrics.forEach(x => {
             const date = new Date(x.metrics_date);
             const day = date.getDay();
 
             reviewsList[day] = x.reviews;
-         });
+        });
 
-         setReviews(reviewsList);
+        setReviews(reviewsList);
+    }
+
+    const getMetrics = async () => {
+       try {
+        const response = await axios.get(
+            `${ip}/user/metrics/${username}`,
+            reqConfig
+        );
+
+        setMetrics(response.data.user.metrics.sort((a,b) => new Date(a.metrics_date) - new Date(b.metrics_date)));
+        setPercent(response.data.metricsInfo.percent);
+        setIsGrow(response.data.metricsInfo.isGrowth);
        } catch (error) {
          Toast.show({
             type: 'error',
