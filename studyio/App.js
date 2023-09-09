@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
-
+import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes';
 import Navigator from './src/navigator';
@@ -8,6 +8,7 @@ import { UserProvider } from './src/hooks/useContextUserId';
 
 
 export default function App() {
+  LogBox.ignoreAllLogs();
   return (
     <NavigationContainer>
         <UserProvider>

@@ -1,5 +1,14 @@
 import { React, useState, useEffect } from 'react';
-import { SafeAreaView, Text, Image, StyleSheet, TouchableOpacity, FlatList, View, Modal } from 'react-native';
+import { 
+    SafeAreaView, 
+    Text, 
+    Image, 
+    StyleSheet, 
+    TouchableOpacity, 
+    FlatList, 
+    View, 
+    Modal,
+} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateDeck } from '../../modais/CreateDeck';
