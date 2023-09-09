@@ -32,3 +32,14 @@ export const DeleteSummarie = (summarieId, ip, token) => {
     return axios.delete(url, authorization);
     
 }
+
+export const EditSummarie = (summarieId, data, ip, token) => {
+    const authorization = {
+		headers: {
+			'Authorization': `Bearer ${token}`,
+		}
+	};
+    var url = `${ip}/summaries/update/${summarieId}`
+    return axios.put(url, data, authorization)
+    
+}
