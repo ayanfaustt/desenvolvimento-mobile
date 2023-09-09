@@ -42,10 +42,10 @@ export function Summaries() {
     async function handleOpenSummarie(item) {
         navigation.navigate('SubPageStack', { screen: 'SummarieOpen', params: { item } });
     };
-    
     async function handleEditSummarie(item) {
-        navigation.navigate('SummarieEdit', {item});
+        navigation.navigate('SubPageStack', { screen: 'SummarieEdit', params: { item } });
     };
+    
 
     async function handleDeleteSummarie(summarieId) {
         try {
