@@ -9,6 +9,7 @@ import { UpdateCard } from '../../modais/UpdateCard';
 import { CreateTag } from '../../modais/CreateTag';
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 export function Decks() {
     const navigation = useNavigation();
@@ -18,7 +19,7 @@ export function Decks() {
     const [visibleModalCreateCard, setVisibleModalCreateCard] = useState(false);
     const [visibleModalEditCard, setVisibleModalEditCard] = useState(false);
     const [visibleModalTag, setVisibleModalTag] = useState(false);
-    const { userId, ip, token } = useUser();
+    const { userId, ip, token, reqConfig } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,6 +32,21 @@ export function Decks() {
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
     };
+
+    const updatedMetrics = async () =>{
+        try {
+            await axios.post(
+                `${ip}/metrics/update/decks/${userId}`,
+                {},
+                reqConfig
+            );
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: `${error}`
+            })
+        }
+    }; 
 
     const handleCreateCardSuccess = () => {
         setVisibleModalCreateCard(false);
@@ -56,6 +72,7 @@ export function Decks() {
         };
 
         fetchData();
+        updatedMetrics();
        
     }, []);
 

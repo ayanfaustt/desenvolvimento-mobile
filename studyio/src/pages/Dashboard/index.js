@@ -6,6 +6,7 @@ import { globalStyles } from '../../styles/global';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { VictoryPie, VictoryChart, VictoryBar } from 'victory-native';
 import { BarChart } from 'react-native-chart-kit';
+import { useFocusEffect } from '@react-navigation/native'; 
 
 export function Dashboard() {
     const {ip, userId, token, reqConfig, username} = useUser();
@@ -45,29 +46,39 @@ export function Dashboard() {
     };
 
 
-    useEffect(()=>{
-        getMetrics();
-    },[]);
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getMetrics();
+        }, [])
+    );
     useEffect(()=>{
         countSummaries();
         countDecks();
+        handleReview();
     },[metrics]);
+
+    const handleReview = () =>{
+        let reviewsList = [0,0,0,0,0,0,0];
+        metrics.forEach(x => {
+            const date = new Date(x.metrics_date);
+            const day = date.getDay();
+
+            reviewsList[day] = x.reviews;
+        });
+
+        setReviews(reviewsList);
+    }
 
     const getMetrics = async () => {
        try {
-         const response = await axios.get(
-             `${ip}/user/metrics/${username}`,
-             reqConfig
-         );
- 
-         setMetrics(response.data.user.metrics);
-         setPercent(response.data.metricsInfo.percent);
-         setIsGrow(response.data.metricsInfo.isGrowth);
-         metrics.sort((a,b) => new Date(a.metrics_date) - new Date(b.metrics_date));
+        const response = await axios.get(
+            `${ip}/user/metrics/${username}`,
+            reqConfig
+        );
 
-         const reviewsData = response.data.user.metrics.map(x => x.reviews);
-         setReviews(reviewsData);
+        setMetrics(response.data.user.metrics.sort((a,b) => new Date(a.metrics_date) - new Date(b.metrics_date)));
+        setPercent(response.data.metricsInfo.percent);
+        setIsGrow(response.data.metricsInfo.isGrowth);
        } catch (error) {
          Toast.show({
             type: 'error',
@@ -127,8 +138,8 @@ export function Dashboard() {
                     <VictoryPie 
                         data={
                             [
-                                {x: "Summaries", y: summaries || 1},
-                                {x: "Decks", y: decks || 1}
+                                {x: summaries > 0 ?  "Summaries": " ", y: summaries || 0},
+                                {x: decks > 0 ? "Decks": " ", y: decks || 0}
                             ]
                         }
                         colorScale={['#024959','#A7C6D9']}
