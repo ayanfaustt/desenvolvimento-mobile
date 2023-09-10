@@ -4,6 +4,7 @@ import { globalStyles } from '../../styles/global';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../../hooks/useContextUserId';
 import { ListOneSummarie } from '../../hooks/useSummarie';
+import Toast from 'react-native-toast-message';
 
 
 export function SummarieOpen() {
@@ -43,10 +44,12 @@ export function SummarieOpen() {
             })
         }
     }; 
+    useEffect(() => {  
+        updatedMetrics();
+    });
 
     useFocusEffect(() => {
         handleListOneSummarie();
-        updatedMetrics();
     });
 
 
