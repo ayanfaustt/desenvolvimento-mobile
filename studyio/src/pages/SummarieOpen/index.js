@@ -11,7 +11,7 @@ export function SummarieOpen() {
     const route = useRoute();
     const summarieId = route.params?.item.id;
     const item = route.params?.item;
-    const { userId, ip, token } = useUser();
+    const { userId, ip, token, reqConfig } = useUser();
 
     // console.log(item);
 
@@ -27,8 +27,26 @@ export function SummarieOpen() {
         }
     };
 
+
+
+    const updatedMetrics = async () =>{
+        try {
+            await axios.post(
+                `${ip}/metrics/update/summaries/${userId}`,
+                {},
+                reqConfig
+            );
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: `${error}`
+            })
+        }
+    }; 
+
     useFocusEffect(() => {
         handleListOneSummarie();
+        updatedMetrics();
     });
 
 
