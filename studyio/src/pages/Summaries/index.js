@@ -7,6 +7,7 @@ import { CreateTag } from '../../modais/CreateTag';
 import { ListSummaries, DeleteSummarie } from '../../hooks/useSummarie';
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 
 export function Summaries() {
@@ -14,7 +15,7 @@ export function Summaries() {
     const [summarieList, setSummarieList] = useState([]);
     const [visibleModal, setVisibleModal] = useState(false);
     const [visibleModal2, setVisibleModal2] = useState(false);
-    const { userId, ip, token } = useUser();
+    const { userId, ip, token, reqConfig } = useUser();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => {
         setMenuOpen(!isMenuOpen);
@@ -29,9 +30,24 @@ export function Summaries() {
         fetchData();
     }, []);
 
-    useFocusEffect(() => {
-        handleListSummarie();
-    });
+    // useFocusEffect(() => {
+    //     handleListSummarie();
+    // });
+
+    const updatedMetrics = async () =>{
+        try {
+            await axios.post(
+                `${ip}/metrics/update/summaries/${userId}`,
+                {},
+                reqConfig
+            );
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: `${error}`
+            })
+        }
+    }; 
 
     async function handleListSummarie() {
         try {
@@ -71,7 +87,9 @@ export function Summaries() {
     }
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie(item)}>
+        // <TouchableOpacity style={globalStyles.card} onPress={() => handleOpenSummarie(item)}>
+        <TouchableOpacity style={globalStyles.card} onPress={() => [handleOpenSummarie(item), updatedMetrics()]}>
+        {/* <TouchableOpacity style={globalStyles.card} onPress={() =>  updatedMetrics()}> */}
             <View style={globalStyles.cardContent}>
                 <Text style={globalStyles.cardText}>{item.summarie_name}</Text>
                 <Text style={globalStyles.cardText2}>{item.tag.tag_name}</Text>
