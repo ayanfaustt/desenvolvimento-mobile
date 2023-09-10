@@ -1,3 +1,4 @@
+// import axios from 'axios';
 import { React, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { globalStyles } from '../../styles/global';
@@ -29,24 +30,6 @@ export function SummarieOpen() {
     };
 
 
-
-    const updatedMetrics = async () =>{
-        try {
-            await axios.post(
-                `${ip}/metrics/update/summaries/${userId}`,
-                {},
-                reqConfig
-            );
-        } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: `${error}`
-            })
-        }
-    }; 
-    useEffect(() => {  
-        updatedMetrics();
-    });
 
     useFocusEffect(() => {
         handleListOneSummarie();
