@@ -1,12 +1,13 @@
 import { React, useState, useEffect } from 'react';
 import { SafeAreaView, Text, Image, StyleSheet, TouchableOpacity, FlatList, View, Modal } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { globalStyles } from '../../styles/global';
 import { CreateSummarie } from '../../modais/CreateSummarie';
 import { CreateTag } from '../../modais/CreateTag';
 import { ListSummaries, DeleteSummarie } from '../../hooks/useSummarie';
 import { useUser } from '../../hooks/useContextUserId';
 import Toast from 'react-native-toast-message';
+
 
 export function Summaries() {
     const navigation = useNavigation();
@@ -19,6 +20,7 @@ export function Summaries() {
         setMenuOpen(!isMenuOpen);
     };
 
+
     useEffect(() => {
         const fetchData = async () => {
             handleListSummarie();
@@ -26,6 +28,10 @@ export function Summaries() {
 
         fetchData();
     }, []);
+
+    useFocusEffect(() => {
+        handleListSummarie();
+    });
 
     async function handleListSummarie() {
         try {
